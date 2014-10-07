@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import es.us.isa.odin.server.domain.Documents;
 import es.us.isa.odin.server.security.UserAccount;
@@ -40,7 +42,7 @@ public class DocumentsPermissionEvaluator implements PermissionEvaluator {
 		boolean isAllowed = false;
 		
 		if (canHandle(authentication, permission)) {
-			UserAccount user = (UserAccount) authentication.getPrincipal();
+			UserDetails user = (UserDetails) authentication.getPrincipal();
 			
 			// Check si el usuario tiene ese permiso
 			// hasPermission = user.getPermissions().contains(permission); TODO:
@@ -60,7 +62,7 @@ public class DocumentsPermissionEvaluator implements PermissionEvaluator {
 
 	
 	private boolean canHandle(Authentication authentication, Object permission) {
-		return authentication != null && permission instanceof String && authentication.getPrincipal() instanceof UserAccount;
+		return authentication != null && permission instanceof String && (authentication.getPrincipal() instanceof UserDetails);
 	}
 	
 	

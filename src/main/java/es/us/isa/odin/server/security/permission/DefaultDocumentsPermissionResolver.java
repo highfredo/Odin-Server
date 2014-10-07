@@ -1,6 +1,7 @@
 package es.us.isa.odin.server.security.permission;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import es.us.isa.odin.server.domain.Documents;
 import es.us.isa.odin.server.repositories.DefaultDocumentRepository;
@@ -14,12 +15,12 @@ public class DefaultDocumentsPermissionResolver implements PermissionResorver {
 	
 	@Override
 	@SuppressWarnings("rawtypes")
-	public boolean isAllowed(UserAccount principal, Object targetDomainObject, String permission) {
+	public boolean isAllowed(UserDetails principal, Object targetDomainObject, String permission) {
 		return isAllowed(principal, (Documents) targetDomainObject, permission);
 	}
 
 	@Override
-	public boolean isAllowed(UserAccount principal, Long targetId, String permission) {
+	public boolean isAllowed(UserDetails principal, Long targetId, String permission) {
 		boolean allowed = false;
 		
 		switch (permission) {
