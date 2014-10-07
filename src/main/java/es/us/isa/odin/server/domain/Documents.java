@@ -2,6 +2,7 @@ package es.us.isa.odin.server.domain;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -17,6 +18,10 @@ public class Documents<T> {
 	private String id;
 	@Version
 	private Long version;
+	
+	private String owner;
+	private List<String> canRead;
+	private List<String> canWrite;
 	
 	@CreatedDate
 	private DateTime creationDate;
@@ -79,7 +84,31 @@ public class Documents<T> {
 	public Object removeMetadata(String key) {
 		return this.metadata.remove(key);
 	}
+		
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public List<String> getCanRead() {
+		return canRead;
+	}
+
+	public void setCanRead(List<String> canRead) {
+		this.canRead = canRead;
+	}
 	
+	public List<String> getCanWrite() {
+		return canWrite;
+	}
+
+	public void setCanWrite(List<String> canWrite) {
+		this.canWrite = canWrite;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 
