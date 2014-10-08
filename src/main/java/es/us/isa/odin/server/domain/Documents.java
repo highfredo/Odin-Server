@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.NotNull;
+
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -19,9 +21,10 @@ public class Documents<T> {
 	@Version
 	private Long version;
 	
+	@NotNull
 	private String owner;
-	private List<String> canRead;
-	private List<String> canWrite;
+	@NotNull
+	private Map<String, String> permissions; // {id_user: "r", id_user: "rw"}
 	
 	@CreatedDate
 	private DateTime creationDate;
@@ -30,11 +33,13 @@ public class Documents<T> {
 	
 	public Documents(T entity) {
 		metadata = new HashMap<>();
+		permissions = new HashMap<>();
 		this.entity = entity;
 	}
 	
 	public Documents() {
 		metadata = new HashMap<>();
+		permissions = new HashMap<>();
 	}
 
 	public String getId() {
@@ -93,20 +98,12 @@ public class Documents<T> {
 		this.owner = owner;
 	}
 
-	public List<String> getCanRead() {
-		return canRead;
+	public Map<String, String> getPermissions() {
+		return permissions;
 	}
 
-	public void setCanRead(List<String> canRead) {
-		this.canRead = canRead;
-	}
-	
-	public List<String> getCanWrite() {
-		return canWrite;
-	}
-
-	public void setCanWrite(List<String> canWrite) {
-		this.canWrite = canWrite;
+	public void setPermissions(Map<String, String> permissions) {
+		this.permissions = permissions;
 	}
 
 	@Override
