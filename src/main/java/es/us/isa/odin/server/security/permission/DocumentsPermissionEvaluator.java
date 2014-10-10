@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import es.us.isa.odin.server.domain.Documents;
+import es.us.isa.odin.server.domain.Document;
 import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.UserAccountRepository;
 
@@ -32,7 +32,7 @@ public class DocumentsPermissionEvaluator implements PermissionEvaluator {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-		Documents entity = (Documents) targetDomainObject;
+		Document entity = (Document) targetDomainObject;
 		return hasPermission(authentication, entity.getId(), entity.getClass().getSimpleName(), permission);
 	}
 

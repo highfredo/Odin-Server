@@ -14,9 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import es.us.isa.odin.server.socialsecurity.Role;
-import es.us.isa.odin.server.socialsecurity.SocialMediaService;
-
 /**
  * A user.
  */
@@ -59,19 +56,7 @@ public class UserAccount implements UserDetails {
 
     @JsonIgnore
     private Set<Authority> authorities = new HashSet<>();
-    private Role role;
-    
-    private SocialMediaService signInProvider;
-    
-    
-    public SocialMediaService getSignInProvider() {
-		return signInProvider;
-	}
-
-	public void setSignInProvider(SocialMediaService signInProvider) {
-		this.signInProvider = signInProvider;
-	}
-
+ 
 	public String getUsername() {
         return username;
     }
@@ -205,13 +190,5 @@ public class UserAccount implements UserDetails {
 		this.version = version;
 	}
 
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-	
 	
 }

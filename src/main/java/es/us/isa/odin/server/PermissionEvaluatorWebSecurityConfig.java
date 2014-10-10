@@ -15,7 +15,7 @@ import es.us.isa.odin.server.security.permission.PermissionResorver;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled=true)
-public class CustomPermissionEvaluatorWebSecurityConfig extends GlobalMethodSecurityConfiguration {
+public class PermissionEvaluatorWebSecurityConfig extends GlobalMethodSecurityConfiguration {
  
 
 	  @Override
