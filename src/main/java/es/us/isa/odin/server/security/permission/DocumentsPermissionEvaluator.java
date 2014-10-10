@@ -7,11 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import es.us.isa.odin.server.domain.Document;
-import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.UserAccountRepository;
 
 public class DocumentsPermissionEvaluator implements PermissionEvaluator {

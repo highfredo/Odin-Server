@@ -21,6 +21,9 @@ public class Document<T> {
     private Date creation;
     private Date lastModification;   
     private String path;
+	private String owner;
+	private Map<String, String> permissions; // {id_user: "r", id_user: "rw"}
+
     
     private T payload;
     private String description;        
@@ -109,6 +112,22 @@ public class Document<T> {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public Map<String, String> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(Map<String, String> permissions) {
+		this.permissions = permissions;
 	}
 
 	/**

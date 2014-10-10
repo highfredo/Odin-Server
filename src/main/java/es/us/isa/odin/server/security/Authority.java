@@ -25,6 +25,14 @@ public class Authority implements GrantedAuthority {
     @Size(min = 0, max = 50)
     @Id
     private String name;
+	
+	public Authority(){
+		
+	}
+	
+	public Authority(String name) {
+		this.name = name;
+	}
 
     public String getName() {
         return name;

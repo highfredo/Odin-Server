@@ -14,4 +14,10 @@ public class IndexController {
 		return "index";
 	}
 	
+	@RequestMapping("/sample")
+	public String sample() {
+		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+		return "index";
+	}
+	
 }
