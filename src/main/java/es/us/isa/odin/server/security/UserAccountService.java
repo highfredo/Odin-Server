@@ -36,4 +36,7 @@ public class UserAccountService implements SocialUserDetailsService {
 		return repository.findByUsername(userId);
 	}
 
+	public UserAccount findByUsername(String username) {
+		return repository.findByUsername(username);
+	}
 }

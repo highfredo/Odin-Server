@@ -35,13 +35,18 @@ public class SocialSignUpController {
 			result.addObject("message",
 					"Unable to connect using social account. Try creating a regular account.");
 		}
+		
 		return result;
 	}
 
 	private ModelAndView createAccountAndSignIn(Connection<?> connection, WebRequest request) {
 		ModelAndView result = null;
+		
+		UserAccount userAccount = userAccountService.findByUsername(connection.getDisplayName());
 
-		UserAccount userAccount = userAccountService.create(connection);
+		if(userAccount == null)
+			userAccount = userAccountService.create(connection);
+		
 		signInUtils.signin(userAccount.getUsername(), connection.getKey().getProviderId());
 		connectionRepository.addConnection(connection);
 		result = new ModelAndView("redirect:/connect/" + connection.getKey().getProviderId());

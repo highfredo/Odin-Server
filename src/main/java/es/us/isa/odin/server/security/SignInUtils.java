@@ -19,4 +19,8 @@ public class SignInUtils {
 			SecurityContextHolder.getContext().setAuthentication(token);
 		}
 	}
+	
+	public static UserAccount getPrincipal() {
+		return (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
 }

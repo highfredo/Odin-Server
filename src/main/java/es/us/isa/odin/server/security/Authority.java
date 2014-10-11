@@ -1,14 +1,11 @@
 package es.us.isa.odin.server.security;
 
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.GrantedAuthority;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import java.io.Serializable;
+import org.springframework.data.annotation.Id;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * An authority (a security role) used by Spring Security.

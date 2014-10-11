@@ -3,10 +3,11 @@ package es.us.isa.odin.server.security;
 import java.util.Collection;
 
 import org.hibernate.validator.constraints.Email;
+import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.social.security.SocialUser;
 
-public class UserAccount extends SocialUser{
+public class UserAccount extends SocialUser {
 
 	/**
 	 * 
@@ -21,9 +22,18 @@ public class UserAccount extends SocialUser{
 				accountNonLocked, authorities);
 	}
 	
-	
+	@Id
+	private String id;
 	@Email
 	private String email;
+		
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getEmail() {
 		return email;

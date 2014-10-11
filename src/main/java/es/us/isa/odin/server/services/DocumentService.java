@@ -13,6 +13,7 @@ public interface DocumentService<T extends Document> {
     public T save(T doc);
     public boolean remove(String id);
     
+    public T get(String id);
     public void move(String id, String to);
     public void copy(String id, String to);
 

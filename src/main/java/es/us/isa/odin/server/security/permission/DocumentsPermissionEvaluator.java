@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.us.isa.odin.server.domain.Document;
+import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.UserAccountRepository;
 
 public class DocumentsPermissionEvaluator implements PermissionEvaluator {
@@ -29,18 +31,20 @@ public class DocumentsPermissionEvaluator implements PermissionEvaluator {
 
 	@Override
 	@SuppressWarnings("rawtypes")
+	@Transactional
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
 		Document entity = (Document) targetDomainObject;
 		return hasPermission(authentication, entity.getId(), entity.getClass().getSimpleName(), permission);
 	}
 
 	@Override
+	@Transactional
 	public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
 		boolean hasPermission = true;
 		boolean isAllowed = false;
 		
 		if (canHandle(authentication, permission)) {
-			UserDetails user = (UserDetails) authentication.getPrincipal();
+			UserAccount user = (UserAccount) authentication.getPrincipal();
 			
 			// Check si el usuario tiene ese permiso
 			// hasPermission = user.getPermissions().contains(permission); TODO:
@@ -49,7 +53,7 @@ public class DocumentsPermissionEvaluator implements PermissionEvaluator {
 			if(hasPermission) { 
 				PermissionResorver resolver = resolvers.get(targetType);
 				if(resolver != null) 
-					isAllowed = resolver.isAllowed(user, (Long) targetId, (String) permission);
+					isAllowed = resolver.isAllowed(user, (String) targetId, (String) permission);
 				else
 					System.err.println("RESOLVER NOT FOUND");
 			}
