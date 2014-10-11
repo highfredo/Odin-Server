@@ -59,7 +59,7 @@ public class SocialConfig implements SocialConfigurer {
 				if (authentication == null) {
 					throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
 				}
-				return ((UserAccount) authentication.getPrincipal()).getId();
+				return authentication.getName(); //((UserAccount) authentication.getPrincipal()).getId();
 			}
 		};
 	}

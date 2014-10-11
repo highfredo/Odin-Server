@@ -6,6 +6,7 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,8 +21,21 @@ public class SocialSignUpController {
 	private ConnectionRepository connectionRepository;
 
 	@RequestMapping(value = "/signin")
+	@ResponseBody
 	public String signupRedirect(WebRequest request) {
-		return "redirect:/signup";
+		String result = null;
+		ProviderSignInUtils providerSignInUtils = new ProviderSignInUtils();
+		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);		
+		
+		if (connection != null) {
+			UserAccount userAccount = userAccountService.findByUsername(connection.getDisplayName());
+			signInUtils.signin(userAccount.getId(), connection.getKey().getProviderId());
+			result = "sign in complete";
+		} else {
+			result = "Unable to connect sign in";
+		}
+		
+		return result; //"redirect:/signup";
 	}
 	
 	@RequestMapping(value = "/signup")
