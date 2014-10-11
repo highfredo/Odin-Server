@@ -17,10 +17,8 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.social.connect.mem.InMemoryUsersConnectionRepository;
 import org.springframework.social.connect.web.ConnectController;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
-import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
@@ -54,7 +52,6 @@ public class SocialConfig implements SocialConfigurer {
 
 	@Override
 	public UserIdSource getUserIdSource() {
-		//return new AuthenticationNameUserIdSource();
 		return new UserIdSource() {	
 			@Override
 			public String getUserId() {
