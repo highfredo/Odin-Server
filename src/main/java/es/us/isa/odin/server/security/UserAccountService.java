@@ -11,6 +11,8 @@ import org.springframework.social.security.SocialUserDetails;
 import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.stereotype.Service;
 
+import es.us.isa.odin.server.security.permission.Permissions;
+
 
 @Service
 public class UserAccountService implements SocialUserDetailsService {
@@ -22,6 +24,8 @@ public class UserAccountService implements SocialUserDetailsService {
 		
 		Set<Authority> authorities = new HashSet<Authority>();
 		authorities.add(new Authority("ROLE_USER"));
+		authorities.add(new Authority(Permissions.DOCUMENT.READ));
+		authorities.add(new Authority(Permissions.DOCUMENT.WRITE));
 			
 		UserAccount user = new UserAccount(connection.getDisplayName(), "socialUser", true,
 				true, true,	true, authorities);

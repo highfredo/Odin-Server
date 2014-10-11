@@ -42,5 +42,13 @@ public class UserAccount extends SocialUser {
 	public void setEmail(String email) {
 		this.email = email;
 	}	
+	
+	public boolean havePermission(String permission) {
+		return this.getAuthorities().contains(permission);
+	}
+	
+	public boolean havePermission(Authority permission) {
+		return this.getAuthorities().contains(permission);
+	}
 
 }

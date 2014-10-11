@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.isa.odin.server.domain.Document;
+import es.us.isa.odin.server.security.Authority;
 import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.UserAccountRepository;
 
@@ -47,7 +48,7 @@ public class DocumentsPermissionEvaluator implements PermissionEvaluator {
 			UserAccount user = (UserAccount) authentication.getPrincipal();
 			
 			// Check si el usuario tiene ese permiso
-			// hasPermission = user.getPermissions().contains(permission); TODO:
+			hasPermission = user.havePermission( new Authority((String) permission)); 
 
 			// Check si el permiso es valido
 			if(hasPermission) { 

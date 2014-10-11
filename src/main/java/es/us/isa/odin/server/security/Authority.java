@@ -49,6 +49,11 @@ public class Authority implements GrantedAuthority {
         if (this == o) {
             return true;
         }
+        
+        if(o instanceof String) {
+        	return this.name.equals(o);
+        }
+        
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
@@ -61,7 +66,7 @@ public class Authority implements GrantedAuthority {
 
         return true;
     }
-
+    
     @Override
     public int hashCode() {
         return name != null ? name.hashCode() : 0;
