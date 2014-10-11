@@ -5,6 +5,8 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
@@ -30,6 +32,7 @@ public class PermissionEvaluatorWebSecurityConfig extends GlobalMethodSecurityCo
 	}
 
 	 @Bean
+	 @Scope(value="singleton", proxyMode=ScopedProxyMode.INTERFACES)
 	 public PermissionResorver permissionResorver() {
 		 return new DocumentPermissionResolver();
 	 }
