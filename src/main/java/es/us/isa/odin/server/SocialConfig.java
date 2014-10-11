@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.social.UserIdSource;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
@@ -23,6 +25,7 @@ import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
+import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.connection.MongoUsersConnectionRepository;
 import es.us.isa.odin.server.security.connection.SocialUserConnectionRepository;
 
@@ -51,7 +54,17 @@ public class SocialConfig implements SocialConfigurer {
 
 	@Override
 	public UserIdSource getUserIdSource() {
-		return new AuthenticationNameUserIdSource();
+		//return new AuthenticationNameUserIdSource();
+		return new UserIdSource() {	
+			@Override
+			public String getUserId() {
+				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+				if (authentication == null) {
+					throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
+				}
+				return ((UserAccount) authentication.getPrincipal()).getId();
+			}
+		};
 	}
 
 	@Override
