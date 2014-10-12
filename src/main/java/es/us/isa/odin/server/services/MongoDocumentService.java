@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
@@ -40,7 +42,8 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 
 	@Override
 	public MongoDocument save(MongoDocument doc) {
-		doc.setOwner(UserAccountService.getPrincipal().getId());
+		if(doc.getOwner() == null)
+			doc.setOwner(UserAccountService.getPrincipal().getId());
 		return repositoy.save(doc);
 	}
 
@@ -73,17 +76,24 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	}
 
 	@Override
-	public InputStream getDocumentPayload(String id) {
+	public InputStream getDocumentPayload(String id) throws NoSuchRequestHandlingMethodException {
 		MongoDocument doc = repositoy.findOne(id);
+		
+		if(doc == null || StringUtils.isEmpty(doc.getPayload()))
+			throw new NoSuchRequestHandlingMethodException(id + " Documento no encontrado", this.getClass());
+
 		GridFSDBFile fsdbFile = gridOperations.findOne(findFsFileById(doc.getPayload()));
 		
 		return fsdbFile.getInputStream();
 	}
 
 	@Override
-	public MongoDocument saveDocumentPayload(String id, InputStream file) {
+	public MongoDocument saveDocumentPayload(String id, InputStream file) throws NoSuchRequestHandlingMethodException {
 		MongoDocument doc = repositoy.findOne(id);
 		
+		if(doc == null)
+			throw new NoSuchRequestHandlingMethodException(id + " Documento no encontrado", this.getClass());
+
 		GridFSFile oldFsFile = gridOperations.findOne(findFsFileById(doc.getPayload()));
 	 
 		GridFSFile fsFile = gridOperations.store(file, id);   
@@ -93,6 +103,7 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 		}
 		
         doc.setPayload(fsFile.getId().toString());
+        doc.setLength(fsFile.getLength());
         this.save(doc);
                 
 		return doc;

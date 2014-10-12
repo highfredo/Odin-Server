@@ -26,6 +26,7 @@ public class Document<T> {
     private T payload;
     private String description;  
     private Boolean isFolder;
+    private Long length;
     // private DocumentType type;
     private Map<String, Object> metadata;   
     
@@ -178,5 +179,14 @@ public class Document<T> {
 		this.isFolder = isFolder;
 	}
 
+	public Long getLength() {
+		return length;
+	}
+
+	public void setLength(Long length) {
+		this.length = length;
+	}
+
+	
     
 }

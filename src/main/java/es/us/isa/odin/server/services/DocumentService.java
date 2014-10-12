@@ -3,6 +3,8 @@ package es.us.isa.odin.server.services;
 import java.io.InputStream;
 import java.util.List;
 
+import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
+
 import es.us.isa.odin.server.domain.Document;
 
 
@@ -18,6 +20,6 @@ public interface DocumentService<T extends Document> {
     public void move(String id, String to);
     public void copy(String id, String to);
 
-    public InputStream getDocumentPayload(String id);	
-    public T saveDocumentPayload(String id, InputStream file);
+    public InputStream getDocumentPayload(String id) throws NoSuchRequestHandlingMethodException;	
+    public T saveDocumentPayload(String id, InputStream file) throws NoSuchRequestHandlingMethodException;
 }

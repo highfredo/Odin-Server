@@ -1,19 +1,26 @@
 package es.us.isa.odin.server.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.social.ResourceNotFoundException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.services.DocumentService;
@@ -47,16 +54,16 @@ public class DocumentController {
 	}
 	
 	@RequestMapping("/download")
-	public HttpEntity<byte[]> download(@RequestParam("id") String id) throws IOException {
+	public ResponseEntity<InputStreamResource> download(@RequestParam("id") String id) throws IOException, NoSuchRequestHandlingMethodException {
 		MongoDocument doc = documentService.get(id);
-	    byte[] file = IOUtils.toByteArray(documentService.getDocumentPayload(id));
-
-	    HttpHeaders header = new HttpHeaders();
-	    //header.setContentType(new MediaType("application", "pdf")); TODO:
-	    header.set("Content-Disposition", "attachment; filename=" + doc.getName().replace(" ", "_"));
-	    header.setContentLength(file.length);
+		
+		InputStreamResource inputStreamResource = new InputStreamResource(documentService.getDocumentPayload(id));
+		
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.set("Content-Disposition", "attachment; filename=\"" + doc.getName() + "\"");
+	    headers.setContentLength(doc.getLength());
 	    
-	    return new HttpEntity<byte[]>(file, header);
+	    return new ResponseEntity<InputStreamResource>(inputStreamResource, headers, HttpStatus.OK);
 	}
 
     
