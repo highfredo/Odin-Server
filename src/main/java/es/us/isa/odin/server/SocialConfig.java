@@ -23,7 +23,8 @@ import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
-import es.us.isa.odin.server.security.UserAccount;
+import es.us.isa.odin.server.security.SocialConnectionSignUp;
+import es.us.isa.odin.server.security.UserAccountService;
 import es.us.isa.odin.server.security.connection.MongoUsersConnectionRepository;
 import es.us.isa.odin.server.security.connection.SocialUserConnectionRepository;
 
@@ -33,6 +34,8 @@ public class SocialConfig implements SocialConfigurer {
 	
 	@Autowired
 	private SocialUserConnectionRepository socialUserConnectionRepository;
+	@Autowired
+	private UserAccountService userAccountService;
 
 	@Override
 	public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig, Environment env) {
@@ -67,7 +70,9 @@ public class SocialConfig implements SocialConfigurer {
 	@Override
 	public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
 		//return new InMemoryUsersConnectionRepository(connectionFactoryLocator);
-		return new MongoUsersConnectionRepository(socialUserConnectionRepository, (SocialAuthenticationServiceLocator) connectionFactoryLocator, Encryptors.noOpText());
+		MongoUsersConnectionRepository conf = new MongoUsersConnectionRepository(socialUserConnectionRepository, (SocialAuthenticationServiceLocator) connectionFactoryLocator, Encryptors.noOpText());
+		conf.setConnectionSignUp(new SocialConnectionSignUp(userAccountService));
+		return conf;
 	}
     
 	@Bean

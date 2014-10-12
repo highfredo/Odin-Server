@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.social.security.SocialUser;
 import org.springframework.social.security.SocialUserDetails;
 
 public class UserAccount extends User implements SocialUserDetails{
