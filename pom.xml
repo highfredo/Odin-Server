@@ -9,7 +9,6 @@
 	<groupId>es.us.isa.odin</groupId>
 	<artifactId>odin-server</artifactId>
 	<version>0.0.1-JOHNNY</version>
-	<packaging>war</packaging>
 	
 	<!-- Propiedades generales del proyecto -->
 	<properties>

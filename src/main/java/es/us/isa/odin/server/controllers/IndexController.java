@@ -1,13 +1,11 @@
 package es.us.isa.odin.server.controllers;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 
-@Controller
+//@Controller
 public class IndexController {
 
-
+	/*
 	@RequestMapping("/")
 	public String view() {
 		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -18,6 +16,6 @@ public class IndexController {
 	public String sample() {
 		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 		return "index";
-	}
+	}*/
 	
 }
