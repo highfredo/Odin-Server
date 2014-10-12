@@ -10,6 +10,7 @@ import es.us.isa.odin.server.domain.Document;
 public interface DocumentService<T extends Document> {
 
     public List<T> listDocuments(String path);
+    public List<T> listDocumentsRecursive(String path);
     public T save(T doc);
     public boolean remove(String id);
     

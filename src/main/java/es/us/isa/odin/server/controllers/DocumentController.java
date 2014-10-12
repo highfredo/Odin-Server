@@ -2,6 +2,7 @@ package es.us.isa.odin.server.controllers;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -28,9 +29,16 @@ public class DocumentController {
 	@RequestMapping(value="/testsave")
 	public MongoDocument save(){
 		MongoDocument document = new MongoDocument();
-		document.setName("HOLA MUNDO");
+		document.setName("carpetita");
+		document.setFolder(true);
+		document.setPath("/");
 		documentService.save(document);
 		return document;
+	}
+	
+	@RequestMapping("/list")
+	public List<MongoDocument> list(@RequestParam("path") String path) {
+		return documentService.listDocuments(path);
 	}
 	
 	@RequestMapping("/get")

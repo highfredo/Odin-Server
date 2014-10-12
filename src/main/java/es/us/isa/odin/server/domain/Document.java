@@ -6,6 +6,8 @@
 
 package es.us.isa.odin.server.domain;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Map;
 
@@ -22,13 +24,11 @@ public class Document<T> {
     private Date lastModification;   
     private String path;
 	private String owner;
-	private Map<String, String> permissions; // {id_user: "r", id_user: "rw"}
-
-    
+	private Map<String, String> permissions; // {id_user: "r", id_user: "rw"}   
     private T payload;
-    private String description;        
+    private String description;  
+    private Boolean isFolder;
     // private DocumentType type;
-    
     private Map<String, Object> metadata;   
     
 
@@ -172,4 +172,13 @@ public class Document<T> {
         this.description = description;
     }
 
+	public Boolean isFolder() {
+		return isFolder;
+	}
+	
+	public void setFolder(Boolean isFolder) {
+		this.isFolder = isFolder;
+	}
+
+    
 }

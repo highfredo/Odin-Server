@@ -28,6 +28,13 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 
 	@Override
 	public List<MongoDocument> listDocuments(String path) {
+		if(!path.endsWith("/")) path+="/";
+		return repositoy.findByPath(path);
+	}
+	
+	@Override
+	public List<MongoDocument> listDocumentsRecursive(String path) {
+		if(!path.endsWith("/")) path+="/";
 		return repositoy.findByPathStartsWith(path);
 	}
 

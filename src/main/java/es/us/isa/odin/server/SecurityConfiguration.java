@@ -32,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http	
         	.csrf().disable()
         	.formLogin()
-            	.loginPage("/login")
+            	.loginPage("/auth/twitter")
                 .loginProcessingUrl("/login/authenticate")
                 .failureUrl("/login?error=bad_credentials")
             .and()

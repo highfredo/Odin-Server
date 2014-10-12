@@ -9,5 +9,7 @@ import es.us.isa.odin.server.domain.MongoDocument;
 @Repository
 public interface MongoDocumentRepository extends DocumentRepository<MongoDocument> {
 
-	public List<MongoDocument> findByPathStartsWith(String basePath);	
+	public List<MongoDocument> findByPathStartsWith(String basePath);
+
+	public List<MongoDocument> findByPath(String path);	
 }
