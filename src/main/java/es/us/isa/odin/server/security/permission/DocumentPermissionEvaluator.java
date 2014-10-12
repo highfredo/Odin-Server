@@ -15,18 +15,18 @@ import es.us.isa.odin.server.security.Authority;
 import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.UserAccountRepository;
 
-public class DocumentsPermissionEvaluator implements PermissionEvaluator {
+public class DocumentPermissionEvaluator implements PermissionEvaluator {
 	
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 
 	private Map<String, PermissionResorver> resolvers;
 	
-	public DocumentsPermissionEvaluator() {
+	public DocumentPermissionEvaluator() {
 		resolvers = new HashMap<String, PermissionResorver>();
 	}
 	
-	public DocumentsPermissionEvaluator(Map<String, PermissionResorver> resolvers) {
+	public DocumentPermissionEvaluator(Map<String, PermissionResorver> resolvers) {
 		this.resolvers = resolvers;
 	}
 

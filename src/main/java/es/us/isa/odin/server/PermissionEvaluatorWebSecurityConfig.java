@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
 import es.us.isa.odin.server.security.permission.DocumentPermissionResolver;
-import es.us.isa.odin.server.security.permission.DocumentsPermissionEvaluator;
+import es.us.isa.odin.server.security.permission.DocumentPermissionEvaluator;
 import es.us.isa.odin.server.security.permission.PermissionResorver;
 
 @Configuration
@@ -25,7 +25,7 @@ public class PermissionEvaluatorWebSecurityConfig extends GlobalMethodSecurityCo
 		HashMap<String, PermissionResorver> permissionResorvers = new HashMap<String, PermissionResorver>();
 		permissionResorvers.put("Document", permissionResorver());
 				
-		expressionHandler.setPermissionEvaluator(new DocumentsPermissionEvaluator(permissionResorvers));
+		expressionHandler.setPermissionEvaluator(new DocumentPermissionEvaluator(permissionResorvers));
 		return expressionHandler;  
 	}
 
