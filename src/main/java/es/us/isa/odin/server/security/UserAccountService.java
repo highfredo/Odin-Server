@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.security.SocialUserDetails;
@@ -37,10 +38,14 @@ public class UserAccountService implements SocialUserDetailsService {
 
 	@Override
 	public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException, DataAccessException {
-		return repository.findByUsername(userId);
+		return repository.findOne(userId); 
 	}
 
 	public UserAccount findByUsername(String username) {
 		return repository.findByUsername(username);
+	}
+	
+	public static UserAccount getPrincipal() {
+		return (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 }

@@ -54,7 +54,7 @@ public class UserAccount extends User implements SocialUserDetails{
 
 	@Override
 	public String getUserId() {
-		return super.getUsername(); //this.id;
+		return this.id;
 	}
 
 }

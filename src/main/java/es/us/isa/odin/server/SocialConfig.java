@@ -18,12 +18,15 @@ import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.web.ConnectController;
+import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
 import es.us.isa.odin.server.security.SocialConnectionSignUp;
+import es.us.isa.odin.server.security.SocialSignInAdapter;
+import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.UserAccountService;
 import es.us.isa.odin.server.security.connection.MongoUsersConnectionRepository;
 import es.us.isa.odin.server.security.connection.SocialUserConnectionRepository;
@@ -36,6 +39,8 @@ public class SocialConfig implements SocialConfigurer {
 	private SocialUserConnectionRepository socialUserConnectionRepository;
 	@Autowired
 	private UserAccountService userAccountService;
+	@Autowired
+	private SignInAdapter signInAdapter;
 
 	@Override
 	public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig, Environment env) {
@@ -62,16 +67,15 @@ public class SocialConfig implements SocialConfigurer {
 				if (authentication == null) {
 					throw new IllegalStateException("Unable to get a ConnectionRepository: no user signed in");
 				}
-				return authentication.getName(); //((UserAccount) authentication.getPrincipal()).getId();
+				return ((UserAccount) authentication.getPrincipal()).getId();
 			}
 		};
 	}
 
 	@Override
 	public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
-		//return new InMemoryUsersConnectionRepository(connectionFactoryLocator);
 		MongoUsersConnectionRepository conf = new MongoUsersConnectionRepository(socialUserConnectionRepository, (SocialAuthenticationServiceLocator) connectionFactoryLocator, Encryptors.noOpText());
-		conf.setConnectionSignUp(new SocialConnectionSignUp(userAccountService));
+		conf.setConnectionSignUp(new SocialConnectionSignUp(userAccountService, (SocialSignInAdapter) signInAdapter));
 		return conf;
 	}
     

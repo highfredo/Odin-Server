@@ -15,7 +15,7 @@ import com.mongodb.gridfs.GridFSFile;
 
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;
-import es.us.isa.odin.server.security.SignInUtils;
+import es.us.isa.odin.server.security.UserAccountService;
 
 @Service
 public class MongoDocumentService implements DocumentService<MongoDocument> {
@@ -33,7 +33,7 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 
 	@Override
 	public MongoDocument save(MongoDocument doc) {
-		doc.setOwner(SignInUtils.getPrincipal().getId());
+		doc.setOwner(UserAccountService.getPrincipal().getId());
 		return repositoy.save(doc);
 	}
 
