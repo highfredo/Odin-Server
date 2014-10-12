@@ -30,11 +30,13 @@ public class DocumentPermissionResolver implements PermissionResorver {
 		
 		switch (permission) {
 		case DOCUMENT.READ:
-			allowed = doc.getOwner().equals(principal.getId()) || doc.getPermissions().get(principal.getId()).contains("r");
+			allowed = doc.getOwner().equals(principal.getId()) || 
+				(doc.getPermissions()!=null && doc.getPermissions().get(principal.getId())!=null && doc.getPermissions().get(principal.getId()).contains("r"));
 			break;		
 		
 		case DOCUMENT.WRITE:
-			allowed = doc.getOwner().equals(principal.getId()) || doc.getPermissions().get(principal.getId()).contains("w");
+			allowed = doc.getOwner().equals(principal.getId()) || 
+				(doc.getPermissions()!=null && doc.getPermissions().get(principal.getId())!=null && doc.getPermissions().get(principal.getId()).contains("w"));
 			break;		
 		
 		default:

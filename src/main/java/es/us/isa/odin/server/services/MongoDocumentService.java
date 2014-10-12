@@ -31,16 +31,17 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	@Override
 	public List<MongoDocument> listDocuments(String path) {
 		if(!path.endsWith("/")) path+="/";
-		return repositoy.findByPath(path);
+		return repositoy.findByPathAndOwner(path, UserAccountService.getPrincipal().getId());
 	}
 	
 	@Override
-	public List<MongoDocument> listDocumentsRecursive(String path) {
+	public List<MongoDocument> listAllDocuments(String path) {
 		if(!path.endsWith("/")) path+="/";
-		return repositoy.findByPathStartsWith(path);
+		return repositoy.findByPathStartsWithAndOwner(path, UserAccountService.getPrincipal().getId());
 	}
 
 	@Override
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
 	public MongoDocument save(MongoDocument doc) {
 		if(doc.getOwner() == null)
 			doc.setOwner(UserAccountService.getPrincipal().getId());
@@ -48,6 +49,7 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	}
 
 	@Override
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
 	public boolean remove(String id) {
 		MongoDocument doc = repositoy.findOne(id);
 		gridOperations.delete(findFsFileById(doc.getPayload()));
@@ -58,24 +60,26 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	
 	@Override
 	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ')")
-	//@PreAuthorize("hasRole('USER')")
 	public MongoDocument get(String id) {
 		return repositoy.findOne(id);
 	}
 	
 	@Override
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
 	public void move(String id, String to) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
 	public void copy(String id, String to) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ')")
 	public InputStream getDocumentPayload(String id) throws NoSuchRequestHandlingMethodException {
 		MongoDocument doc = repositoy.findOne(id);
 		
@@ -88,6 +92,7 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	}
 
 	@Override
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
 	public MongoDocument saveDocumentPayload(String id, InputStream file) throws NoSuchRequestHandlingMethodException {
 		MongoDocument doc = repositoy.findOne(id);
 		
