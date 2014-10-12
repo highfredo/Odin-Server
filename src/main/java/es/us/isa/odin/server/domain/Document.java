@@ -6,8 +6,6 @@
 
 package es.us.isa.odin.server.domain;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Map;
 

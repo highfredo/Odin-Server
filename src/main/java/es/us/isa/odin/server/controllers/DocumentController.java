@@ -26,7 +26,7 @@ public class DocumentController {
 	private DocumentService<MongoDocument> documentService;
 	
 	
-	@RequestMapping(value="/testsave")
+	@RequestMapping(value="/save")
 	public MongoDocument save(){
 		MongoDocument document = new MongoDocument();
 		document.setName("carpetita");
