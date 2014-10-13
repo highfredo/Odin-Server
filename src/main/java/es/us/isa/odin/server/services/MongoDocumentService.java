@@ -1,6 +1,7 @@
 package es.us.isa.odin.server.services;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,14 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	@Override
 	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
 	public MongoDocument save(MongoDocument doc) {
-		if(doc.getOwner() == null)
+		Date time = new Date();
+		if(doc.getOwner() == null) {
 			doc.setOwner(UserAccountService.getPrincipal().getId());
+			doc.setCreation(time);
+		}
+		doc.setLastModification(time);
+		if(!doc.getPath().endsWith("/")) doc.setPath(doc.getPath()+"/");
+		
 		return repositoy.save(doc);
 	}
 

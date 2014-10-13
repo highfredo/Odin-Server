@@ -19,6 +19,7 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.web.ConnectController;
 import org.springframework.social.connect.web.SignInAdapter;
+import org.springframework.social.google.api.Google;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.social.twitter.api.Twitter;
@@ -84,11 +85,17 @@ public class SocialConfig implements SocialConfigurer {
         return new ConnectController(connectionFactoryLocator, connectionRepository);
     }
 
-
 	@Bean
 	@Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)
 	public Twitter twitter(ConnectionRepository repository) {
 		Connection<Twitter> connection = repository.findPrimaryConnection(Twitter.class);
+		return connection != null ? connection.getApi() : null;
+	}
+	
+	@Bean
+	@Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)
+	public Google google(ConnectionRepository repository) {
+		Connection<Google> connection = repository.findPrimaryConnection(Google.class);
 		return connection != null ? connection.getApi() : null;
 	}
 }

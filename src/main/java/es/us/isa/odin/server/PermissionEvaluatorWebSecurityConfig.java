@@ -11,8 +11,8 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
-import es.us.isa.odin.server.security.permission.DocumentPermissionResolver;
 import es.us.isa.odin.server.security.permission.DocumentPermissionEvaluator;
+import es.us.isa.odin.server.security.permission.DocumentPermissionResolver;
 import es.us.isa.odin.server.security.permission.PermissionResorver;
 
 @Configuration

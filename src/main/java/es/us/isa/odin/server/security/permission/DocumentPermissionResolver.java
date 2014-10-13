@@ -26,17 +26,21 @@ public class DocumentPermissionResolver implements PermissionResorver {
 	public boolean isAllowed(UserAccount principal, String targetId, String permission) {
 		boolean allowed = false;
 		
+		if(targetId == null) return true;
+		
 		MongoDocument doc = repository.findOne(targetId);
 		
 		switch (permission) {
 		case DOCUMENT.READ:
 			allowed = doc.getOwner().equals(principal.getId()) || 
-				(doc.getPermissions()!=null && doc.getPermissions().get(principal.getId())!=null && doc.getPermissions().get(principal.getId()).contains("r"));
+				(doc.getPermissions()!=null && doc.getPermissions().get(principal.getId())!=null && doc.getPermissions().get(principal.getId()).contains("r")) ||
+				(doc.getPermissions()!=null && doc.getPermissions().get("public")!=null && doc.getPermissions().get("public").contains("r"));
 			break;		
 		
 		case DOCUMENT.WRITE:
 			allowed = doc.getOwner().equals(principal.getId()) || 
-				(doc.getPermissions()!=null && doc.getPermissions().get(principal.getId())!=null && doc.getPermissions().get(principal.getId()).contains("w"));
+				(doc.getPermissions()!=null && doc.getPermissions().get(principal.getId())!=null && doc.getPermissions().get(principal.getId()).contains("w")) ||
+				(doc.getPermissions()!=null && doc.getPermissions().get("public")!=null && doc.getPermissions().get("public").contains("w"));
 			break;		
 		
 		default:

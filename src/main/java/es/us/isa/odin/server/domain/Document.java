@@ -22,12 +22,12 @@ public class Document<T> {
     private Date lastModification;   
     private String path;
 	private String owner;
-	private Map<String, String> permissions; // {id_user: "r", id_user: "rw"}   
+	private Map<String, String> permissions; // {id_user: "r", id_user: "rw", public: "rw"}   
     private T payload;
     private String description;  
     private Boolean isFolder;
     private Long length;
-    // private DocumentType type;
+    private String type; // DocumentType
     private Map<String, Object> metadata;   
     
 
@@ -187,6 +187,13 @@ public class Document<T> {
 		this.length = length;
 	}
 
-	
-    
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	    
 }
