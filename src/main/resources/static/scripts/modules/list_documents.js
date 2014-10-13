@@ -98,6 +98,11 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 			})
 		}
 	}
+	/*
+	$scope.ordeDocuments = function(document) {
+		var field = $scope.orderByField
+		return document[field] < 
+	}*/
 		
 });
 
