@@ -1,16 +1,45 @@
 
 <div class="modal-header">
-	<h3 class="modal-title">I'm a modal!</h3>
+	<h3 class="modal-title">Documento:</h3>
 </div>
 
 <div class="modal-body">
-	<ul>
-		<li ng-repeat="item in items"><a ng-click="selected.item = item">{{item }}</a></li>
-	</ul>
-	Selected: <b>{{ document }}</b>
+	<div class="row" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class-name-or-function">
+		<form class="form-horizontal" role="form">	
+
+		  <div class="form-group col-md-11">
+		  	 <div class="input-group col-md-offset-1">
+			    <div class="input-group-addon">Fichero</div>
+				<input type="file" ng-file-select="onFileSelect($files)">
+			 </div>
+		  </div>
+		  
+		  <div class="form-group col-md-11">
+		    <div class="input-group col-md-offset-1">
+		      <div class="input-group-addon">Nombre</div>
+		      <input class="form-control" type="text" placeholder="foo.bar" ng-model="document.name">
+		    </div>
+		  </div>
+		  
+		  <div class="form-group col-md-11">
+		  	 <div class="input-group col-md-offset-1">
+			    <div class="input-group-addon">Descripción</div>
+				<textarea class="form-control" id="textarea" name="textarea" ng-model="document.description">default text</textarea>
+			 </div>
+		  </div>
+		  
+		</form>
+	</div>	
+
+	<br/>
+	<div class="row" ng-show="progress != null">
+		<div class="col-md-10 col-md-offset-1">
+			<progressbar class="progress-striped" value="progress" type="success">{{progress}}%</progressbar>
+		</div>
+	</div>
 </div>
 
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="ok()">OK</button>
-	<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-primary" ng-click="ok()">Crear</button>
+	<button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
 </div>

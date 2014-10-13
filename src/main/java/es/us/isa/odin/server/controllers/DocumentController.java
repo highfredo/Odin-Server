@@ -1,10 +1,12 @@
 package es.us.isa.odin.server.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +34,7 @@ public class DocumentController {
 	
 	
 	@RequestMapping(value="/save")
-	public MongoDocument save(@RequestBody DocumentForm documentForm) {
+	public DocumentForm save(@RequestBody DocumentForm documentForm) {
 		
 		MongoDocument document;
 		if(documentForm.getId() == null) {
@@ -50,17 +52,33 @@ public class DocumentController {
 		
 		document = documentService.save(document);
 		
-		return document;
+		return new DocumentForm(document);
 	}
 	
 	@RequestMapping("/list")
-	public List<MongoDocument> list(@RequestParam("path") String path) {
-		return documentService.listDocuments(path);
+	public List<DocumentForm> list(@RequestParam("path") String path) {
+		List<DocumentForm> result = new ArrayList<DocumentForm>();
+		for(MongoDocument doc : documentService.listDocuments(path)) {
+			result.add(new DocumentForm(doc));
+		}
+		
+		return result;
 	}
 	
 	@RequestMapping("/get")
-	public MongoDocument get(@RequestParam("id") String id) {
-		return documentService.get(id); 
+	public DocumentForm get(@RequestParam("id") String id) {
+		return new DocumentForm(documentService.get(id)); 
+	}
+	
+	@RequestMapping("/remove")
+	public JSONObject remove(@RequestParam("id") String id) {
+		JSONObject result = new JSONObject();
+		if(documentService.remove(id)) {
+			result.append("remove", "OK");
+		} else {
+			result.append("remove", "Fail");
+		}
+		return result; 
 	}
 	
 	@RequestMapping("/download")

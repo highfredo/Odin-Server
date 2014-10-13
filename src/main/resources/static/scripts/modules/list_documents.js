@@ -17,6 +17,12 @@ module.factory('Document',  function($resource) {
 			params: {
 				action: 'save'
 			}
+		},
+		remove: {
+			method: 'DELETE', 
+			params: {
+				action: 'remove'
+			}
 		}
 	});
 });
@@ -24,36 +30,51 @@ module.factory('Document',  function($resource) {
 module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $modal, Document) {
 	$scope.path = $state.params.path.split("/");
 	$scope.currentPath = "/" + $state.params.path;
+		
+	/*
+	$('.download-btn').tooltip({
+	   container: 'body',
+		title: "Descargar"
+	}) 
+	$('.remove-btn').tooltip({
+		container: 'body',
+		title: "Borrar"
+	}) 
+	*/
 	
 	Document.list({path: $scope.currentPath}, function(result){
 		$scope.documents = result;
 	})
 	
-	$scope.viewDocument = function(docId) {
+	$scope.viewDocument = function(docId, editMode) {
 		var modalInstance = $modal.open({
 		      templateUrl: 'views/view_document.html',
 		      controller: 'viewDocumentCtrl',
 		      resolve: {
 		      	document: function () {
-		      		return $.grep($scope.documents, function(doc){ return doc.id == docId; })[0];
+		      		if(docId != null)
+		      			return $.extend(true, {}, $.grep($scope.documents, function(doc){ return doc.id == docId; })[0]);
+		      		else 
+		      			return {}
+		      	}, 
+		      	editMode: function() {
+		      		return editMode
+		      	},
+		      	currentPath: function() {
+		      		return $scope.currentPath
 		      	}
 		      }
 		});
-		/*
-		modalInstance.result.then(function (document) {
-		      $scope.document = document; //TODO: renovar datos de verdad
-		      var d = $.grep($scope.documents, function(doc){ return doc.id == docId; })[0]
-		      d = document;
-		    }, function () {
-		      $log.info('Modal dismissed at: ' + new Date());
-		});*/
 	}
 	
-	$scope.createFolder = function() {
+	$scope.viewFolder = function(editMode) {
 		var modalInstance = $modal.open({
-		      templateUrl: 'views/new_folder.html',
-		      controller: 'newFolderCtrl',
-		      size: 'sm'
+		      templateUrl: 'views/view_folder.html',
+		      controller: 'viewFolderCtrl',
+		      size: 'sm',
+		      resolve: {
+			    editMode: editMode
+			  }
 		});		
 		modalInstance.result.then(function (folderName) {
 		      var newFolder = new Document({name: folderName, path: $scope.currentPath, isFolder: true})
@@ -63,26 +84,65 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 		});
 	}
 	
+	$scope.remove = function(docId) {
+		if (confirm('¿Desea borrar el fichero?')) {
+			Document.remove({id: docId}, function(result){
+				if(result.remove == "OK") {
+					$state.go($state.current, {}, {reload: true});
+				} else {
+					alert("Ha ocurrido un error al borrar el Documento.")
+				}
+			}).error(function(data){
+				alert("Ha ocurrido un error al borrar el Documento.")
+				console.log(data)
+			})
+		}
+	}
+		
 });
 
-module.controller('viewDocumentCtrl', function ($scope, $modalInstance, document) {
+module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload, $state, Document, document, editMode, currentPath) {	
+	console.log(editMode, currentPath)
+
+	$scope.document = document; // $.extend(true, {}, document);
 	
-	document.name = "aaaaaa"
 	
-	//$scope.document = document;
-	
+	$scope.onFileSelect = function($files) {
+		$scope.file = $files[0]
+		$scope.document.name = $scope.file.name;
+	}
 	
 	$scope.ok = function () {
-		$modalInstance.close($scope.document);
+		$.extend($scope.document, {path: currentPath, isFolder: false})
+	    var newDocument = new Document($scope.document)
+		$scope.uploading = true;
+		newDocument.$save(function(response){
+			$scope.upload = $upload.upload({
+		        url: $backendUrl+'document/upload', 
+		        method: 'POST',
+		        data: {id: response.id},
+		        file: $scope.file,
+		    }).progress(function(evt) {
+		    	$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+		    }).success(function(data, status, headers, config) {
+		        $modalInstance.close(newDocument);
+		        $state.go($state.current, {}, {reload: true});
+		        $scope.uploading = false;
+		    }).error(function(data) {
+		    	alert("Ha ocurrido un error subiendo el fichero.")
+		    });			
+	    })
 	};
-
 	$scope.cancel = function () {
+		if($scope.upload && $scope.uploading) {
+			$scope.upload.abort()
+		}
 		$modalInstance.dismiss('cancel');
 	};
 })
 
 
-module.controller('newFolderCtrl', function ($scope, $modalInstance) {
+module.controller('viewFolderCtrl', function ($scope, $modalInstance) {
 	$scope.ok = function () {
 		$modalInstance.close($scope.folderName);
 	};

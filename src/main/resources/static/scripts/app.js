@@ -11,7 +11,7 @@
 
 var $backendUrl = "http://localhost:8080/"
 	
-var app = angular.module('odinClientApp', ['ngResource', 'ui.router', 'ui.bootstrap', 'listDocumentsModule']);
+var app = angular.module('odinClientApp', ['ngResource', 'ui.router', 'ui.bootstrap', 'angularFileUpload', 'listDocumentsModule']);
 
 app.config(function($stateProvider, $urlRouterProvider){
     $urlRouterProvider.otherwise('/list/');

@@ -17,26 +17,33 @@
           <th class="col-md-3">Nombre</th>
           <th class="col-md-2">Modificado el</th>
           <th class="col-md-3">
-            <div class="btn-group">
-	          	<a class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload"></span> Nuevo Documento</a>
-	          	<a class="btn btn-info" ng-click="createFolder()"><span class="glyphicon glyphicon-folder-open"></span> Nueva Carpeta</a>
+            <div class="btn-group pull-right">
+	          	<a class="btn btn-primary" ng-click="viewDocument(null, true)"><span class="glyphicon glyphicon-cloud-upload"></span> Nuevo Documento</a>
+	          	<a class="btn btn-info" ng-click="viewFolder(true)"><span class="glyphicon glyphicon-folder-open"></span> Nueva Carpeta</a>
           	</div> 
           </th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="doc in documents">
-          <td ng-if="doc.folder"><span class="glyphicon glyphicon-folder-open file-icon"></span></td>
-          <td ng-if="!doc.folder"><span class="glyphicon glyphicon-file file-icon"></span></td>
+          <td ng-if="doc.isFolder"><span class="glyphicon glyphicon-folder-open file-icon"></span></td>
+          <td ng-if="!doc.isFolder"><span class="glyphicon glyphicon-file file-icon"></span></td>
           
-          <td ng-if="doc.folder"><a ui-sref="list({path: doc.path.substring(1) + doc.name})">{{doc.name}}</a></td>
-          <td ng-if="!doc.folder"><a class="pointer" ng-click="viewDocument(doc.id)">{{doc.name}}</a></td>
+          <td ng-if="doc.isFolder"><a ui-sref="list({path: doc.path.substring(1) + doc.name})">{{doc.name}}</a></td>
+          <td ng-if="!doc.isFolder"><a class="pointer" ng-click="viewDocument(doc.id, false)">{{doc.name}}</a></td>
           
           <td ng-if="doc.lastModification">{{doc.lastModification | date:'dd-MM-yyyy hh:mma'}}</td>
           <td ng-if="!doc.lastModification">No data</td>
           
-          <td ng-if="!doc.folder"><a target="_blank" ng-href="{{backendUrl}}document/download?id={{doc.id}}" class="btn btn-warning col-md-offset-6"><span class="glyphicon glyphicon-cloud-download"></span> Descargar</a></td>
-          <td ng-if="doc.folder"></td>
+          <td ng-if="doc.hasFile">
+          	<div class="btn-group col-md-offset-6 pull-right">
+	          	<a target="_blank" ng-href="{{backendUrl}}document/download?id={{doc.id}}" class="btn btn-warning download-btn"><span class="glyphicon glyphicon-cloud-download"></span></a>
+	          	<a ng-click="remove(doc.id)" class="btn btn-danger col-md-offset-6"><span class="glyphicon glyphicon-trash remove-btn"></span></a>
+          	</div>
+          </td>
+          <td ng-if="!doc.hasFile">
+          		<a ng-click="remove(doc.id)" class="btn btn-danger col-md-offset-6 pull-right"><span class="glyphicon glyphicon-trash remove-btn"></span></a>
+          </td>
         </tr>
       </tbody>
     </table>

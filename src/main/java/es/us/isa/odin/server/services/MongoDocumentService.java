@@ -58,11 +58,35 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	@Override
 	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
 	public boolean remove(String id) {
-		MongoDocument doc = repositoy.findOne(id);
-		gridOperations.delete(findFsFileById(doc.getPayload()));
-		repositoy.delete(id);
+		try {
+			MongoDocument doc = repositoy.findOne(id);
+			return this.remove(doc);
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
+	public boolean remove(MongoDocument doc) {
+		try {
+			if(doc.isFolder()) {
+				List<MongoDocument> toDelete = this.listAllDocuments(doc.getPath() + doc.getName());
+				if(toDelete.isEmpty()) {
+					repositoy.delete(doc.getId());
+				} else {
+					for(MongoDocument d : toDelete) {
+						remove(d);
+					}
+				}
+			} else {
+				gridOperations.delete(findFsFileById(doc.getPayload()));
+				repositoy.delete(doc.getId());
+			}
+		} catch(Exception e) {
+			return false;
+		}
 		
-		return repositoy.findOne(id) != null;
+		return true;
 	}
 	
 	@Override
