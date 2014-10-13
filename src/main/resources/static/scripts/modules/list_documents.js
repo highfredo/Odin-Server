@@ -46,14 +46,27 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 		$scope.documents = result;
 	})
 	
-	$scope.viewDocument = function(docId, editMode) {
+	$scope.viewDocument = function(doc, editMode) {
+		var templateUrl, controller;
+		
+		if(doc == null || doc == "document") {
+			templateUrl = 'views/view_document.html'
+			controller = 'viewDocumentCtrl'
+		} else if(doc == "folder") {
+			templateUrl = 'views/view_folder.html'
+			controller = 'viewFolderCtrl'
+		} else {
+			templateUrl = doc.isFolder ? 'views/view_folder.html' : 'views/view_document.html'
+			controller = doc.isFolder ? 'viewFolderCtrl' : 'viewDocumentCtrl'
+		}
+			
 		var modalInstance = $modal.open({
-		      templateUrl: 'views/view_document.html',
-		      controller: 'viewDocumentCtrl',
+		      templateUrl: templateUrl,
+		      controller: controller,
 		      resolve: {
 		      	document: function () {
-		      		if(docId != null)
-		      			return $.extend(true, {}, $.grep($scope.documents, function(doc){ return doc.id == docId; })[0]);
+		      		if(typeof doc != "string")
+		      			return $.extend(true, {}, doc);
 		      		else 
 		      			return {}
 		      	}, 
@@ -67,15 +80,19 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 		});
 	}
 	
-	$scope.viewFolder = function(editMode) {
+	/*
+	$scope.viewFolder = function(folderId, editMode) {
 		var modalInstance = $modal.open({
 		      templateUrl: 'views/view_folder.html',
 		      controller: 'viewFolderCtrl',
 		      size: 'sm',
 		      resolve: {
-			    editMode: editMode
+			    editMode: function() {
+		      		return editMode
+		      	}
 			  }
 		});		
+		
 		modalInstance.result.then(function (folderName) {
 		      var newFolder = new Document({name: folderName, path: $scope.currentPath, isFolder: true})
 		      newFolder.$save(function(response){
@@ -83,7 +100,7 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 		      })
 		});
 	}
-	
+	*/
 	$scope.remove = function(docId) {
 		if (confirm('¿Desea borrar el fichero?')) {
 			Document.remove({id: docId}, function(result){
@@ -92,29 +109,19 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 				} else {
 					alert("Ha ocurrido un error al borrar el Documento.")
 				}
-			}).error(function(data){
-				alert("Ha ocurrido un error al borrar el Documento.")
-				console.log(data)
 			})
 		}
 	}
-	/*
-	$scope.ordeDocuments = function(document) {
-		var field = $scope.orderByField
-		return document[field] < 
-	}*/
-		
 });
 
 module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload, $state, Document, document, editMode, currentPath) {	
-	console.log(editMode, currentPath)
-
-	$scope.document = document; // $.extend(true, {}, document);
+	$scope.document = document; 
 	
 	
 	$scope.onFileSelect = function($files) {
 		$scope.file = $files[0]
-		$scope.document.name = $scope.file.name;
+		if(!document.id)
+			$scope.document.name = $scope.file.name;
 		$scope.fileName = $scope.file.name;
 	}
 	
@@ -123,20 +130,25 @@ module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload,
 	    var newDocument = new Document($scope.document)
 		$scope.uploading = true;
 		newDocument.$save(function(response){
-			$scope.upload = $upload.upload({
-		        url: $backendUrl+'document/upload', 
-		        method: 'POST',
-		        data: {id: response.id},
-		        file: $scope.file,
-		    }).progress(function(evt) {
-		    	$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
-		    }).success(function(data, status, headers, config) {
-		        $modalInstance.close(newDocument);
-		        $state.go($state.current, {}, {reload: true});
-		        $scope.uploading = false;
-		    }).error(function(data) {
-		    	alert("Ha ocurrido un error subiendo el fichero.")
-		    });			
+			if($scope.file) {
+				$scope.upload = $upload.upload({
+			        url: $backendUrl+'document/upload', 
+			        method: 'POST',
+			        data: {id: response.id},
+			        file: $scope.file,
+			    }).progress(function(evt) {
+			    	$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+			    }).success(function(data, status, headers, config) {
+			        $modalInstance.close(newDocument);
+			        $state.go($state.current, {}, {reload: true});
+			        $scope.uploading = false;
+			    }).error(function(data) {
+			    	alert("Ha ocurrido un error subiendo el fichero.")
+			    });		
+			} else{
+				$state.go($state.current, {}, {reload: true});
+				$modalInstance.close(response);
+			}
 	    })
 	};
 	$scope.cancel = function () {
@@ -148,9 +160,16 @@ module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload,
 })
 
 
-module.controller('viewFolderCtrl', function ($scope, $modalInstance) {
+module.controller('viewFolderCtrl', function ($scope, $modalInstance, $state, Document, document, editMode, currentPath) {
+	$scope.document = document; 
+	
 	$scope.ok = function () {
-		$modalInstance.close($scope.folderName);
+		$.extend($scope.document, {path: currentPath, isFolder: true})
+		var newFolder = new Document($scope.document)
+		newFolder.$save(function(response){
+			$state.go($state.current, {}, {reload: true});
+			$modalInstance.close(response);
+		})
 	};
 	$scope.cancel = function () {
 		$modalInstance.dismiss('cancel');

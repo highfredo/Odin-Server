@@ -30,8 +30,8 @@
           </th>
           <th class="col-md-3">
             <div class="btn-group pull-right">
-	          	<a class="btn btn-primary" ng-click="viewDocument(null, true)"><span class="glyphicon glyphicon-cloud-upload"></span> Nuevo Documento</a>
-	          	<a class="btn btn-info" ng-click="viewFolder(true)"><span class="glyphicon glyphicon-folder-open"></span> Nueva Carpeta</a>
+	          	<a class="btn btn-primary" ng-click="viewDocument('document', true)"><span class="glyphicon glyphicon-cloud-upload"></span> Nuevo Documento</a>
+	          	<a class="btn btn-info" ng-click="viewDocument('folder', true)"><span class="glyphicon glyphicon-folder-open"></span> Nueva Carpeta</a>
           	</div> 
           </th>
         </tr>
@@ -42,19 +42,17 @@
           <td ng-if="!doc.isFolder"><span class="glyphicon glyphicon-file file-icon"></span></td>
           
           <td ng-if="doc.isFolder"><a ui-sref="list({path: doc.path.substring(1) + doc.name})">{{doc.name}}</a></td>
-          <td ng-if="!doc.isFolder"><a class="pointer" ng-click="viewDocument(doc.id, false)">{{doc.name}}</a></td>
+          <td ng-if="!doc.isFolder && doc.hasFile"><a target="_blank" ng-href="{{backendUrl}}document/download?id={{doc.id}}">{{doc.name}}</a></td>
+          <td ng-if="!doc.isFolder && !doc.hasFile">{{doc.name}}</td> 
           
           <td ng-if="doc.lastModification">{{doc.lastModification | date:'dd-MM-yyyy hh:mma'}}</td>
           <td ng-if="!doc.lastModification">No data</td>
           
-          <td ng-if="doc.hasFile">
+          <td>
           	<div class="btn-group col-md-offset-6 pull-right">
-	          	<a target="_blank" ng-href="{{backendUrl}}document/download?id={{doc.id}}" class="btn btn-warning download-btn"><span class="glyphicon glyphicon-cloud-download"></span></a>
-	          	<a ng-click="remove(doc.id)" class="btn btn-danger col-md-offset-6"><span class="glyphicon glyphicon-trash remove-btn"></span></a>
+ 					<a ng-click="viewDocument(doc, true)" class="btn btn-warning download-btn"><span class="glyphicon glyphicon-edit"></span></a>
+ 					<a ng-click="remove(doc.id)" class="btn btn-danger col-md-offset-6"><span class="glyphicon glyphicon-trash remove-btn"></span></a>
           	</div>
-          </td>
-          <td ng-if="!doc.hasFile">
-          		<a ng-click="remove(doc.id)" class="btn btn-danger col-md-offset-6 pull-right"><span class="glyphicon glyphicon-trash remove-btn"></span></a>
           </td>
         </tr>
       </tbody>
