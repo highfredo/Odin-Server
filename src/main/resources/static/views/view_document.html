@@ -10,7 +10,10 @@
 		  <div class="form-group col-md-11">
 		  	 <div class="input-group col-md-offset-1">
 			    <div class="input-group-addon">Fichero</div>
-				<input type="file" ng-file-select="onFileSelect($files)">
+			    <span class="btn btn-default btn-file btn-input-group-right">
+			    	{{fileName || 'Seleccionar'}}
+					<input type="file" ng-file-select="onFileSelect($files)">
+				</span>
 			 </div>
 		  </div>
 		  

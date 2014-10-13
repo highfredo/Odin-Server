@@ -22,3 +22,31 @@ body {
 .file-icon {
 	font-size: 2em;
 }
+
+/* fix input file*/
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+/* fix input file*/
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn-input-group-right {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}

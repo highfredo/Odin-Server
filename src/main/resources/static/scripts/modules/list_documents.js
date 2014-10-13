@@ -115,6 +115,7 @@ module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload,
 	$scope.onFileSelect = function($files) {
 		$scope.file = $files[0]
 		$scope.document.name = $scope.file.name;
+		$scope.fileName = $scope.file.name;
 	}
 	
 	$scope.ok = function () {
