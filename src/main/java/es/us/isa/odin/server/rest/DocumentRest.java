@@ -1,4 +1,4 @@
-package es.us.isa.odin.server.forms;
+package es.us.isa.odin.server.rest;
 
 import java.util.Date;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import es.us.isa.odin.server.domain.Document;
 import es.us.isa.odin.server.security.UserAccountService;
 
-public class DocumentForm {
+public class DocumentRest {
 
 	private String id;
 	private Long revision;
@@ -20,11 +20,11 @@ public class DocumentForm {
 	private String yourPermissions;
 	private String owner;
 	
-	public DocumentForm() {
+	public DocumentRest() {
 		super();
 	}
 	
-	public DocumentForm(Document<?> doc) {
+	public DocumentRest(Document<?> doc) {
 		super();
 		this.setId(doc.getId());
 		this.setRevision(doc.getRevision());

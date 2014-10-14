@@ -11,7 +11,7 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
-import es.us.isa.odin.server.security.permission.DocumentPermissionEvaluator;
+import es.us.isa.odin.server.security.permission.PermissionEvaluatorImpl;
 import es.us.isa.odin.server.security.permission.DocumentPermissionResolver;
 import es.us.isa.odin.server.security.permission.PermissionResorver;
 
@@ -25,7 +25,7 @@ public class PermissionEvaluatorWebSecurityConfig extends GlobalMethodSecurityCo
 		HashMap<String, PermissionResorver> permissionResorvers = new HashMap<String, PermissionResorver>();
 		permissionResorvers.put("Document", permissionResorver());
 				
-		expressionHandler.setPermissionEvaluator(new DocumentPermissionEvaluator(permissionResorvers));
+		expressionHandler.setPermissionEvaluator(new PermissionEvaluatorImpl(permissionResorvers));
 		return expressionHandler;  
 	}
 

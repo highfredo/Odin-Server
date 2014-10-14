@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.MongoDocument;
-import es.us.isa.odin.server.forms.DocumentForm;
+import es.us.isa.odin.server.rest.DocumentRest;
 import es.us.isa.odin.server.services.DocumentService;
 
 @RestController
@@ -34,7 +34,7 @@ public class DocumentController {
 	
 	
 	@RequestMapping(value="/save")
-	public DocumentForm save(@RequestBody DocumentForm documentForm) {
+	public DocumentRest save(@RequestBody DocumentRest documentForm) {
 		
 		MongoDocument document;
 		if(documentForm.getId() == null) {
@@ -52,22 +52,22 @@ public class DocumentController {
 		
 		document = documentService.save(document);
 		
-		return new DocumentForm(document);
+		return new DocumentRest(document);
 	}
 	
 	@RequestMapping("/list")
-	public List<DocumentForm> list(@RequestParam("path") String path) {
-		List<DocumentForm> result = new ArrayList<DocumentForm>();
+	public List<DocumentRest> list(@RequestParam("path") String path) {
+		List<DocumentRest> result = new ArrayList<DocumentRest>();
 		for(MongoDocument doc : documentService.listDocuments(path)) {
-			result.add(new DocumentForm(doc));
+			result.add(new DocumentRest(doc));
 		}
 		
 		return result;
 	}
 	
 	@RequestMapping("/get")
-	public DocumentForm get(@RequestParam("id") String id) {
-		return new DocumentForm(documentService.get(id)); 
+	public DocumentRest get(@RequestParam("id") String id) {
+		return new DocumentRest(documentService.get(id)); 
 	}
 	
 	@RequestMapping("/remove")
