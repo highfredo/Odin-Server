@@ -30,6 +30,8 @@ public class DocumentPermissionResolver implements PermissionResorver {
 		
 		MongoDocument doc = repository.findOne(targetId);
 		
+		if(doc == null) return true;
+		
 		switch (permission) {
 		case DOCUMENT.READ:
 			allowed = doc.getOwner().equals(principal.getId()) || 

@@ -11,7 +11,7 @@
 
 var $backendUrl = "http://localhost:8080/"
 	
-var app = angular.module('odinClientApp', ['ngResource', 'ui.router', 'ui.bootstrap', 'angularFileUpload', 'angular-loading-bar', 'listDocumentsModule']);
+var app = angular.module('odinClientApp', ['ngResource', 'ui.router', 'ui.bootstrap', 'angularFileUpload', 'angular-loading-bar', 'listDocumentsModule', 'errorsModule']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider){
 	cfpLoadingBarProvider.includeSpinner = false;
@@ -22,32 +22,18 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadin
         .state('list', {
             url: '/list/{path:.*}',
             templateUrl: 'views/list_documents.html',
-            controller: 'listDocumentsCtrl',
-            data: {
-            	ncyBreadcrumbLabel: 'Home' 
-            }
+            controller: 'listDocumentsCtrl'
         })
-    
-        
-    $httpProvider.interceptors.push(function($q, $location) {
-    		return {
-    			'responseError': function(response) {
-    				console.log(response.status);
-    				if(response.status >= 500 && response.status <= 599) {
-    					//$location.path("/500", false);
-    					alert("Ha ocurrido un error interno en el servidor");
-    				} else if(response.status == 401) {
-    					$location.path("/401", false);
-    				} else if(response.status == 403) {
-    					$location.path("/403", false);
-    				} else if(response.status == 404) {
-    					$location.path("/404", false);
-    				}
-    				
-    				return $q.reject(response); //response || $q.when(response); 
-    			}
-    		};
-    });
+        .state('error', {
+            url: '/error/{code}',
+            templateUrl: 'views/error.html',
+            controller: 'ErrorCtrl',
+            resolve: {
+                errorInfo: function () {
+                    return this.self.error;
+                }
+            }
+        })      
 })
 
 app.factory('BackendUrl', function() {
@@ -56,7 +42,12 @@ app.factory('BackendUrl', function() {
 	}
 })
 
-app.run(function($rootScope) {
+app.run(function($rootScope, $state) {
     $rootScope.backendUrl = $backendUrl;
+    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+    	event.preventDefault();
+    	$state.get('error').error = error.data;
+    	return $state.go('error', {code: error.status}, {reload: true});
+    });
 })
 
