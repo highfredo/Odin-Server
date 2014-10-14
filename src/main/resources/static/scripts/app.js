@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 
-var $backendUrl = "http://localhost:8080/"
+var $backendUrl = "/"; // "http://localhost:8080/"
 	
 var app = angular.module('odinClientApp', ['ngResource', 'ui.router', 'ui.bootstrap', 'angularFileUpload', 'angular-loading-bar', 'listDocumentsModule', 'errorsModule']);
 
