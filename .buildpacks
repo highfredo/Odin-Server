@@ -1,2 +1,2 @@
-https://github.com/heroku/heroku-buildpack-nodejs src/main/resources/yo
+https://github.com/heroku/heroku-buildpack-nodejs yo
 https://github.com/heroku/heroku-buildpack-java

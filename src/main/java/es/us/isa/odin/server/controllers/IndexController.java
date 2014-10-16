@@ -1,17 +1,19 @@
 package es.us.isa.odin.server.controllers;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
-//@Controller
+
+@Controller
 public class IndexController {
 
-	/*
+	
 	@RequestMapping("/")
 	public String view() {
-		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		return "index";
+		return "forward:index.html";
 	}
-	
+	/*
 	@RequestMapping("/sample")
 	public String sample() {
 		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");

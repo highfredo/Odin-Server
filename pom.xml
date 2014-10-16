@@ -89,23 +89,11 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-joda</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		
-		<dependency>
 		  <groupId>com.fasterxml.jackson.datatype</groupId>
 		  <artifactId>jackson-datatype-json-org</artifactId>
 		  <version>2.4.0</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-guava</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>  
-						
+								
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -114,6 +102,18 @@
 	</dependencies>
 	
 	<build>
+		<resources>
+	      <resource>
+	        <directory>yo</directory>
+	        <excludes>
+	          <exclude>node_modules/**</exclude>
+	          <exclude>.tmp/**</exclude>
+	        </excludes>
+	      </resource>
+	      <resource>
+	        <directory>src/main/resources</directory>
+	      </resource>
+	    </resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -126,26 +126,6 @@
 						<version>1.2.0.RELEASE</version>
 					</dependency>
 				</dependencies>
-			</plugin>
-			<plugin>
-			    <artifactId>maven-war-plugin</artifactId>
-			    <configuration>
-			        <webResources>
-			            <resource>
-			                <directory>yo/dist</directory>
-			            </resource>
-			        </webResources>
-			    </configuration>
-			</plugin>
-			<plugin>
-			    <artifactId>maven-jar-plugin</artifactId>
-			    <configuration>
-			        <webResources>
-			            <resource>
-			                <directory>yo/dist</directory>
-			            </resource>
-			        </webResources>
-			    </configuration>
 			</plugin>
 		</plugins>
 	</build>

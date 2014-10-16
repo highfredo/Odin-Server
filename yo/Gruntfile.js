@@ -329,12 +329,6 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
-      },
-      heroku: {
-        expand: true,
-        cwd: '<%= yeoman.dist %>',
-        dest: '../src/main/webapp/META-INF/resources/',
-        src: '**'
       }
     },
 
@@ -405,7 +399,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('heroku', function(){
-    grunt.task.run(['build', 'copy:heroku']);
+    grunt.task.run(['build']);
   })
 
   grunt.registerTask('default', [

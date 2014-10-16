@@ -38,9 +38,11 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    	if(env.acceptsProfiles("prod"))
-    		registry.addResourceHandler("/**").addResourceLocations("classpath:/yo/dist/");
-    	else
-    		registry.addResourceHandler("/**").addResourceLocations("classpath:/yo/app/");
+    	if(env.acceptsProfiles("dev")) {
+    		registry.addResourceHandler("/**").addResourceLocations("classpath:/app/");
+    		registry.addResourceHandler("/bower_components/**").addResourceLocations("classpath:/bower_components/");
+    	} else {
+    		registry.addResourceHandler("/**").addResourceLocations("classpath:/dist/");
+    	}
     }
 }

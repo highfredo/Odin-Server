@@ -6,10 +6,10 @@
 
 .settings/*
 target/*
-src/main/resources/yo/.tmp/*
-src/main/resources/yo/app/bower_components/*
-src/main/resources/yo/dist/*
-src/main/resources/yo/node_modules/*
+yo/.tmp/*
+#yo/dist/*
+yo/node_modules/*
+yo/bower_components/*
 .classpath
 .project
 /target/
