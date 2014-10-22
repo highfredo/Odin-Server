@@ -6,6 +6,7 @@
 
 package es.us.isa.odin.server.domain;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,104 +16,59 @@ import java.util.Map;
  */
 public class Document<T> {
 
-    private String id;
-    private String name;
-    private Long revision;
-    private Date creation;
-    private Date lastModification;   
-    private String path;
+	private URI uri; // //{userId}/path/to/doc/{name}#docId
+	private String name;
+	private Long revision;
+	private Date creation;
+	private Date lastModification;
 	private String owner;
-	private Map<String, String> permissions; // {id_user: "r", id_user: "rw", public: "rw"}   
-    private T payload;
-    private String description;  
-    private Boolean isFolder;
-    private Long length;
-    private String type; // DocumentType
-    private Map<String, Object> metadata;   
-    
+	private Map<String, String> permissions; // {id_user: "r", id_user: "rw",  public: "rw"}
+	private T payload;
+	private String description;
+	private Long length;
+	private DocumentType type;
+	private Map<String, Object> metadata;
 
-    
-    
-    
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the revision
-     */
-    public Long getRevision() {
-        return revision;
-    }
-
-    /**
-     * @param revision the revision to set
-     */
-    public void setRevision(Long revision) {
-        this.revision = revision;
-    }
-
-    /**
-     * @return the creation
-     */
-    public Date getCreation() {
-        return creation;
-    }
-
-    /**
-     * @param creation the creation to set
-     */
-    public void setCreation(Date creation) {
-        this.creation = creation;
-    }
-
-    /**
-     * @return the lastModification
-     */
-    public Date getLastModification() {
-        return lastModification;
-    }
-
-    /**
-     * @param lastModification the lastModification to set
-     */
-    public void setLastModification(Date lastModification) {
-        this.lastModification = lastModification;
-    }
-    
-    
-    public String getPath() {
-		return path;
+	public URI getUri() {
+		return uri;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setUri(URI uri) {
+		this.uri = uri;
 	}
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getRevision() {
+		return revision;
+	}
+
+	public void setRevision(Long revision) {
+		this.revision = revision;
+	}
+
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
+	public Date getLastModification() {
+		return lastModification;
+	}
+
+	public void setLastModification(Date lastModification) {
+		this.lastModification = lastModification;
+	}
+
 	public String getOwner() {
 		return owner;
 	}
@@ -129,54 +85,20 @@ public class Document<T> {
 		this.permissions = permissions;
 	}
 
-	/**
-     * @return the payload
-     */
-    public T getPayload() {
-        return payload;
-    }
-
-    /**
-     * @param payload the payload to set
-     */
-    public void setPayload(T payload) {
-        this.payload = payload;
-    }
-
-    /**
-     * @return the metadata
-     */
-    public Map<String,Object> getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * @param metadata the metadata to set
-     */
-    public void setMetadata(Map<String,Object> metadata) {
-        this.metadata = metadata;
-    }
-
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-	public Boolean isFolder() {
-		return isFolder;
+	public T getPayload() {
+		return payload;
 	}
-	
-	public void setFolder(Boolean isFolder) {
-		this.isFolder = isFolder;
+
+	public void setPayload(T payload) {
+		this.payload = payload;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Long getLength() {
@@ -187,13 +109,20 @@ public class Document<T> {
 		this.length = length;
 	}
 
-	public String getType() {
+	public DocumentType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(DocumentType type) {
 		this.type = type;
 	}
 
-	    
+	public Map<String, Object> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(Map<String, Object> metadata) {
+		this.metadata = metadata;
+	}
+
 }

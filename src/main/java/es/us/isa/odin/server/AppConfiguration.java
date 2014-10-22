@@ -14,6 +14,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
 
+import es.us.isa.odin.server.converters.DocumentToJsonObjectConverter;
+import es.us.isa.odin.server.converters.JsonObjectToDocumentConverter;
+import es.us.isa.odin.server.converters.JsonObjectToMongoDocumentConverter;
+import es.us.isa.odin.server.converters.MongoDocumentToJsonObjectConverter;
+import es.us.isa.odin.server.converters.StringToDocumentURIConverter;
+import es.us.isa.odin.server.converters.StringToDocumentURIConverterImpl;
+
 
 @Configuration
 @EnableAutoConfiguration
@@ -35,7 +42,7 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
     public JsonOrgModule jsonOrgModule() {
     	return new JsonOrgModule();
     }
-    
+        
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	if(env.acceptsProfiles("dev")) {
@@ -45,4 +52,20 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
     		registry.addResourceHandler("/**").addResourceLocations("classpath:/dist/");
     	}
     }
+    
+    @Bean
+    public StringToDocumentURIConverter stringToDocumentURIConverter() {
+    	return new StringToDocumentURIConverterImpl();
+    } 
+    
+    @Bean
+    public JsonObjectToDocumentConverter<?> jsonObjectToDocumentConverter() {
+    	return new JsonObjectToMongoDocumentConverter();
+    }   
+    
+    @Bean
+    public DocumentToJsonObjectConverter<?> documentToJsonObjectConverter() {
+    	return new MongoDocumentToJsonObjectConverter();
+    }   
+    
 }

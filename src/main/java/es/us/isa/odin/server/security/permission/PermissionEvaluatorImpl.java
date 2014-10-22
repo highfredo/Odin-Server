@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.isa.odin.server.domain.Document;
+import es.us.isa.odin.server.domain.HaveId;
 import es.us.isa.odin.server.security.Authority;
 import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.UserAccountRepository;
@@ -31,10 +31,9 @@ public class PermissionEvaluatorImpl implements PermissionEvaluator {
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
 	@Transactional
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-		Document entity = (Document) targetDomainObject;
+		HaveId entity = (HaveId) targetDomainObject;
 		return hasPermission(authentication, entity.getId(), entity.getClass().getSimpleName(), permission);
 	}
 
@@ -54,7 +53,7 @@ public class PermissionEvaluatorImpl implements PermissionEvaluator {
 			if(hasPermission) { 
 				PermissionResorver resolver = resolvers.get(targetType);
 				if(resolver != null) 
-					isAllowed = resolver.isAllowed(user, (String) targetId, (String) permission);
+					isAllowed = resolver.isAllowed(user, targetId, (String) permission);
 				else
 					System.err.println("RESOLVER NOT FOUND");
 			}

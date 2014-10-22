@@ -9,7 +9,7 @@ import es.us.isa.odin.server.domain.MongoDocument;
 @Repository
 public interface MongoDocumentRepository extends DocumentRepository<MongoDocument> {
 
-	public List<MongoDocument> findByPathStartsWithAndOwner(String basePath, String owner);
+	public List<MongoDocument> findByUriSchemeSpecificPartIn(String uri);
+	public List<MongoDocument> findByOwner(String owner);
 
-	public List<MongoDocument> findByPathAndOwner(String path, String owner);	
 }

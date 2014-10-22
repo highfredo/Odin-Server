@@ -1,5 +1,8 @@
 package es.us.isa.odin.server.security.permission;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +13,7 @@ import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.permission.Permissions.DOCUMENT;
 
 @Component
-public class DocumentPermissionResolver implements PermissionResorver {
+public class MongoDocumentPermissionResolver implements PermissionResorver {
 
 	@Autowired
 	private MongoDocumentRepository repository;
@@ -28,8 +31,15 @@ public class DocumentPermissionResolver implements PermissionResorver {
 		
 		if(targetId == null) return true;
 		
-		MongoDocument doc = repository.findOne(targetId);
-		
+		String realId = "";
+		try {
+			URI uri = new URI(targetId);
+			realId = uri.getFragment();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		MongoDocument doc = repository.findOne(realId);
+
 		if(doc == null) return true;
 		
 		switch (permission) {

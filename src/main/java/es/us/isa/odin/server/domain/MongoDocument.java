@@ -10,30 +10,36 @@ import org.springframework.data.annotation.Version;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-@org.springframework.data.mongodb.core.mapping.Document(collection="Document")
+@org.springframework.data.mongodb.core.mapping.Document(collection = "Document")
 @JsonInclude(Include.NON_NULL)
-public class MongoDocument extends Document<String> {
+public class MongoDocument extends Document<String> implements HaveId {
 
-	@Id
-	@Override
-    public String getId() {
-        return super.getId();
-    }
 	
+	@Id	
+	private String id; 
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	@Version
 	@Override
-    public Long getRevision() {
-        return super.getRevision();
-    }
-	
+	public Long getRevision() {
+		return super.getRevision();
+	}
+
 	@CreatedDate
-    public Date getCreation() {
-        return super.getCreation();
-    }
-	
+	public Date getCreation() {
+		return super.getCreation();
+	}
+
 	@LastModifiedDate
-    public Date getLastModification() {
-        return super.getLastModification();
-    }
-    
+	public Date getLastModification() {
+		return super.getLastModification();
+	}
+
 }

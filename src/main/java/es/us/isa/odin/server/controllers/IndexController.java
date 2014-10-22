@@ -13,11 +13,5 @@ public class IndexController {
 	public String view() {
 		return "forward:index.html";
 	}
-	/*
-	@RequestMapping("/sample")
-	public String sample() {
-		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-		return "index";
-	}*/
 	
 }

@@ -1,27 +1,22 @@
 package es.us.isa.odin.server.services;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
-
-import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
 
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;
 import es.us.isa.odin.server.security.UserAccountService;
 
 @Service
-public class MongoDocumentService implements DocumentService<MongoDocument> {
+public class MongoDocumentService implements DocumentFolderService<MongoDocument> {
 	
 	@Autowired
 	private MongoDocumentRepository repositoy;
@@ -30,128 +25,77 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	private GridFsOperations gridOperations;
 
 	@Override
-	public List<MongoDocument> listDocuments(String path) {
-		if(!path.endsWith("/")) path+="/";
-		return repositoy.findByPathAndOwner(path, UserAccountService.getPrincipal().getId());
-	}
-	
-	@Override
-	public List<MongoDocument> listAllDocuments(String path) {
-		if(!path.endsWith("/")) path+="/";
-		return repositoy.findByPathStartsWithAndOwner(path, UserAccountService.getPrincipal().getId());
+	public List<MongoDocument> listDocuments() {
+		return listDocuments(null);
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
-	public MongoDocument save(MongoDocument doc) {
-		Date time = new Date();
-		if(doc.getOwner() == null) {
-			doc.setOwner(UserAccountService.getPrincipal().getId());
-			doc.setCreation(time);
-		}
-		doc.setLastModification(time);
-		if(!doc.getPath().endsWith("/")) doc.setPath(doc.getPath()+"/");
+	public MongoDocument create() {
+		return MongoDocumentService.createDocument();
+	}
+	
+	public static MongoDocument createDocument() {
+		MongoDocument doc = new MongoDocument();
+		doc.setCreation(new Date());
+		doc.setOwner(UserAccountService.getPrincipal().getId());
+		doc.setPermissions(new HashMap<String, String>());
 		
+		return doc;
+	}
+
+	@Override
+	public MongoDocument get(URI uri) {
+		return repositoy.findOne(uri.getFragment());
+	}
+
+	@Override
+	public MongoDocument save(MongoDocument doc) {
+		return save(doc, null);
+	}
+
+	@Override
+	public MongoDocument save(MongoDocument doc, InputStream file) {
+		Date time = new Date();
+		doc.setLastModification(time);
+		// TODO: handle payload
 		return repositoy.save(doc);
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
-	public boolean remove(String id) {
-		try {
-			MongoDocument doc = repositoy.findOne(id);
-			return this.remove(doc);
-		} catch(Exception e) {
-			return false;
-		}
+	public boolean remove(URI uri) {
+		// TODO Auto-generated method stub
+		return false;
 	}
-	
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
-	public boolean remove(MongoDocument doc) {
-		try {
-			if(doc.isFolder()) {
-				List<MongoDocument> toDelete = this.listAllDocuments(doc.getPath() + doc.getName());
-				if(toDelete.isEmpty()) {
-					repositoy.delete(doc.getId());
-				} else {
-					for(MongoDocument d : toDelete) {
-						remove(d);
-					}
-				}
-			} else {
-				gridOperations.delete(findFsFileById(doc.getPayload()));
-				repositoy.delete(doc.getId());
-			}
-		} catch(Exception e) {
-			return false;
-		}
+
+	@Override
+	public InputStream getDocumentPayload(MongoDocument doc) throws NoSuchRequestHandlingMethodException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<MongoDocument> listDocuments(URI uri) {
+		List<MongoDocument> result = null;
 		
-		return true;
+		if(uri == null)
+			result = repositoy.findByUriSchemeSpecificPartIn("//"+UserAccountService.getPrincipal().getId());
+		else
+			result = repositoy.findByUriSchemeSpecificPartIn(uri.getSchemeSpecificPart());
+		return result;
 	}
-	
+
 	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ')")
-	public MongoDocument get(String id) {
-		return repositoy.findOne(id);
-	}
-	
-	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
-	public void move(String id, String to) {
+	public void move(URI fromUri, URI toUri) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
-	public void copy(String id, String to) {
+	public void copy(URI fromUri, URI toUri) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ')")
-	public InputStream getDocumentPayload(String id) throws NoSuchRequestHandlingMethodException {
-		MongoDocument doc = repositoy.findOne(id);
-		
-		if(doc == null || StringUtils.isEmpty(doc.getPayload()))
-			throw new NoSuchRequestHandlingMethodException(id + " Documento no encontrado", this.getClass());
 
-		GridFSDBFile fsdbFile = gridOperations.findOne(findFsFileById(doc.getPayload()));
-		
-		return fsdbFile.getInputStream();
-	}
-
-	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE')")
-	public MongoDocument saveDocumentPayload(String id, InputStream file) throws NoSuchRequestHandlingMethodException {
-		MongoDocument doc = repositoy.findOne(id);
-		
-		if(doc == null)
-			throw new NoSuchRequestHandlingMethodException(id + " Documento no encontrado", this.getClass());
-
-		GridFSFile oldFsFile = gridOperations.findOne(findFsFileById(doc.getPayload()));
-	 
-		GridFSFile fsFile = gridOperations.store(file, id);   
-		
-		if(oldFsFile != null) {
-			gridOperations.delete(findFsFileById(doc.getPayload()));
-		}
-		
-        doc.setPayload(fsFile.getId().toString());
-        doc.setLength(fsFile.getLength());
-        this.save(doc);
-                
-		return doc;
-	}
-	
-	private Query findFsFileById(String fsid) {
-		return Query.query(Criteria.where("_id").is(fsid));
-	}
-
-
-
-
-	
 
 }
