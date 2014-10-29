@@ -12,7 +12,10 @@ import org.springframework.social.security.SocialUserDetails;
 import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.stereotype.Service;
 
+import es.us.isa.odin.server.domain.Document;
+import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.security.permission.Permissions;
+import es.us.isa.odin.server.services.DocumentFolderService;
 
 
 @Service
@@ -20,6 +23,8 @@ public class UserAccountService implements SocialUserDetailsService {
 	
 	@Autowired
 	private UserAccountRepository repository;
+	@Autowired
+	private DocumentFolderService<MongoDocument> documentService;
 	
 	public UserAccount create(Connection<?> connection) {
 		
@@ -32,6 +37,13 @@ public class UserAccountService implements SocialUserDetailsService {
 				true, true,	true, authorities);
 		
 		repository.save(user);
+		
+		MongoDocument rootDocument = new MongoDocument();
+		rootDocument.setName("root");
+		rootDocument.setOwner(user.getId());
+		rootDocument.setPath("/");
+		rootDocument.setFolder(true);
+		documentService.save(rootDocument);
 		
 		return user;
 	}

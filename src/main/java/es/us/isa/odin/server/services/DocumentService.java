@@ -20,9 +20,4 @@ public interface DocumentService<T extends Document> {
     public boolean remove(URI uri);
     public InputStream getDocumentPayload(URI uri) throws NoSuchRequestHandlingMethodException;	
     
-
-    // TODO: pasar a interfaz independiente
-    public List<T> listDocuments(URI uri);
-    //public void move(String id, String to);
-    //public void copy(String id, String to);
 }

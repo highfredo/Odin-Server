@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;
@@ -16,22 +17,12 @@ public class MongoDocumentURIBuilder implements DocumentURIBuilder {
 	private MongoDocumentRepository repository;
 	
 	@Override
-	public URI build(String idOrPath) {
+	public URI build(String idOrPath) throws NoSuchRequestHandlingMethodException {
 		MongoDocument doc;
 		
 		if(idOrPath.length() == 24 && !idOrPath.contains("/")) {
 			// Es Id
 			doc = repository.findOne(idOrPath);
-		} else if(idOrPath.isEmpty() || idOrPath.equals("/")) {
-			
-			URI baseURI = null;
-			try {
-				baseURI = new URI("//" + UserAccountService.getPrincipal().getId() + "/");
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			} 
-			return baseURI;
-			
 		} else {
 			// Es Path
 			String path = idOrPath;
@@ -47,6 +38,9 @@ public class MongoDocumentURIBuilder implements DocumentURIBuilder {
 			
 			doc = repository.findByUriSchemeSpecificPart(suri);
 		}
+		
+		if(doc == null)
+			throw new NoSuchRequestHandlingMethodException(idOrPath + " Documento no encontrado", this.getClass());
 		
 		return doc.getUri().resolve("#" + doc.getId());
 	}

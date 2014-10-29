@@ -53,7 +53,11 @@ public class MongoDocument extends Document<String> implements HaveId {
 		if(!path.endsWith("/")) path+="/";
 		if(!path.startsWith("/")) path = "/" + path;
 		
-		String suri = "//" + getOwner() + path;
+		String suri = "";
+		if(path.startsWith("//"))
+			suri = path;
+		else
+			suri = "//" + getOwner() + path;
 		
 		Pattern pattern = Pattern.compile("[^/]+/$");
 		Matcher matcher = pattern.matcher(path);

@@ -27,7 +27,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.Document;
-import es.us.isa.odin.server.services.DocumentService;
+import es.us.isa.odin.server.services.DocumentFolderService;
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
 import es.us.isa.odin.server.switcher.DocumentURIBuilder;
 import es.us.isa.odin.server.switcher.JsonObjectSwitcherDocument;
@@ -38,7 +38,7 @@ import es.us.isa.odin.server.switcher.JsonObjectSwitcherDocument;
 public class DocumentController {
 
 	@Autowired
-	private DocumentService documentService;
+	private DocumentFolderService documentService;
 	@Autowired
 	private DocumentSwitcherJsonObject<Document> toJsonObject;
 	@Autowired
@@ -48,7 +48,7 @@ public class DocumentController {
 	
 	
 	@RequestMapping(value="/**", method=RequestMethod.GET)
-	public JSONObject get(HttpServletRequest request) {
+	public JSONObject get(HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
 		String docId = extractPathFromPattern(request);
 	    URI docUri = uriBuilder.build(docId);
 		return toJsonObject.convert(documentService.get(docUri), "get"); 
@@ -71,7 +71,7 @@ public class DocumentController {
 	}
 	
 	@RequestMapping(value="/**", method=RequestMethod.DELETE)
-	public JSONObject remove(HttpServletRequest request) {
+	public JSONObject remove(HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
 		JSONObject result = new JSONObject();
 		String docId = extractPathFromPattern(request);
 	    URI docUri = uriBuilder.build(docId);
@@ -84,7 +84,7 @@ public class DocumentController {
 	}
 	
 	@RequestMapping(value="", method=RequestMethod.GET, params="uri")
-	public List<JSONObject> list(@RequestParam String uri) {
+	public List<JSONObject> list(@RequestParam String uri) throws NoSuchRequestHandlingMethodException {
 	    URI docUri = uriBuilder.build(uri);
 	    
 		List<JSONObject> result = new ArrayList<JSONObject>();
@@ -113,13 +113,30 @@ public class DocumentController {
 		
 		return toJsonObject.convert(document, "update");
 	}
+	
+	@RequestMapping(value="/**", method=RequestMethod.PUT, params="move")
+	public JSONObject move(@RequestParam("move") String moveTo, HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
+		JSONObject response = new JSONObject();
+		String docId = extractPathFromPattern(request);
+	    URI fromUri = uriBuilder.build(docId);
+	    URI toUri = uriBuilder.build(moveTo);
+	    
+		try {
+			documentService.move(fromUri, toUri);
+			response.put("OK", "Fichero copiado correctamente");
+		} catch (Exception e) {
+			response.put("error", e.getMessage());
+		}
+		
+		return response;
+	}
 		
 	@RequestMapping(value="/**", method=RequestMethod.POST, params="upload=true")
-	public Map<String, String> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request){
+	public JSONObject upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
 		String docId = extractPathFromPattern(request);
 	    URI docUri = uriBuilder.build(docId);
 	    
-		HashMap<String, String> response = new HashMap<String, String>();
+	    JSONObject response = new JSONObject();
 		if (!file.isEmpty()) {
 			Document doc = documentService.get(docUri);
 			doc.setType(file.getContentType());

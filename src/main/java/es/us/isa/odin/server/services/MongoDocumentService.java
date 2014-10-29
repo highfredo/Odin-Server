@@ -24,7 +24,7 @@ import es.us.isa.odin.server.repositories.MongoDocumentRepository;
 import es.us.isa.odin.server.security.UserAccountService;
 
 @Service
-public class MongoDocumentService implements DocumentService<MongoDocument> {
+public class MongoDocumentService implements DocumentFolderService<MongoDocument> {
 	
 	@Autowired
 	private MongoDocumentRepository repositoy;
@@ -153,23 +153,38 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 		
 		return fsdbFile.getInputStream();
 	}
-
 	
-	/*
 	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
-	public void move(String id, String to) {
+	//@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
+	public void copy(URI fromUri, URI toUri) {
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
-	public void copy(String id, String to) {
-		// TODO Auto-generated method stub
+	//@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
+	public void move(URI fromUri, URI toUri) {
+		MongoDocument fromDoc = get(fromUri);
+		MongoDocument toDoc = get(toUri); //TODO: excepcion to el "toDoc" no es una carpeta
 		
+		if(fromDoc.isFolder()) {
+			List<MongoDocument> toMove = this.listAllDocuments(fromDoc.getPath());
+			if(toMove.isEmpty() == false) {
+				for(MongoDocument d : toMove) {
+					String newUri = d.getPath();
+					newUri = newUri.replace(fromUri.getSchemeSpecificPart(), toUri.getSchemeSpecificPart() + fromDoc.getName());
+					d.setPath(newUri);
+					save(d);
+				}
+			}
+		} else {
+			String newUri = fromDoc.getPath();
+			newUri = newUri.replace(fromUri.getSchemeSpecificPart(), toUri.getSchemeSpecificPart() + fromDoc.getName());
+			fromDoc.setPath(newUri);
+			save(fromDoc);
+		}
 	}
-	*/
+	
 	
 	private Query findFsFileById(String fsid) {
 		return Query.query(Criteria.where("_id").is(fsid));
