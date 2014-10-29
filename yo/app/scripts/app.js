@@ -11,7 +11,8 @@
 
 var $backendUrl = "/"; // "http://localhost:8080/"
 	
-var app = angular.module('odinClientApp', ['ngResource', 'ui.router', 'ui.bootstrap', 'angularFileUpload', 'angular-loading-bar', 'listDocumentsModule', 'errorsModule']);
+var app = angular.module('odinClientApp', ['ngResource', 'ui.router', 'ui.bootstrap', 'angularFileUpload', 'angular-loading-bar', 
+                                           'listDocumentsModule', 'errorsModule', 'securityModule']);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider){
 	cfpLoadingBarProvider.includeSpinner = false;

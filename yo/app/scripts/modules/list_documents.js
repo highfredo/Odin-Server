@@ -5,29 +5,8 @@ var module = angular.module('listDocumentsModule', [])
     
 module.factory('Document',  function($resource) {
 	return $resource($backendUrl+'document/:id')
-	/*return $resource($backendUrl+'document/:docId', {}, {
-		remove: {
-			method: 'DELETE', 
-			params: {
-				docId: '@id'
-			}
-		}
-	});*/
 });
 
-/*
-module.factory('DocumentList',  function($resource) {
-	return $resource($backendUrl+'document/list/:pathToDoc', {}, {
-		list: {
-			method: 'GET', 
-			params: {
-				pathToDoc: '@path'
-			}, 
-			isArray: true
-		}
-	});
-});
-*/
 
 module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $modal, Document) {
 	$scope.path = $state.params.path.split("/");
