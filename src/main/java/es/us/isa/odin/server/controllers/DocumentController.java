@@ -21,24 +21,25 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
-import es.us.isa.odin.server.domain.MongoDocument;
+import es.us.isa.odin.server.domain.Document;
 import es.us.isa.odin.server.rest.DocumentRest;
 import es.us.isa.odin.server.services.DocumentService;
 
 @RestController
 @RequestMapping("/document")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class DocumentController {
 
 	@Autowired
-	private DocumentService<MongoDocument> documentService;
+	private DocumentService documentService;
 	
 	
 	@RequestMapping(value="/save")
 	public DocumentRest save(@RequestBody DocumentRest documentForm) {
 		
-		MongoDocument document;
+		Document document;
 		if(documentForm.getId() == null) {
-			document = new MongoDocument();
+			document = documentService.create();
 		} else {
 			document = documentService.get(documentForm.getId());
 		}
@@ -58,7 +59,9 @@ public class DocumentController {
 	@RequestMapping("/list")
 	public List<DocumentRest> list(@RequestParam("path") String path) {
 		List<DocumentRest> result = new ArrayList<DocumentRest>();
-		for(MongoDocument doc : documentService.listDocuments(path)) {
+		List<Document> documents = documentService.listDocuments(path);
+		
+		for(Document doc : documents) {
 			result.add(new DocumentRest(doc));
 		}
 		
@@ -83,7 +86,7 @@ public class DocumentController {
 	
 	@RequestMapping("/download")
 	public ResponseEntity<InputStreamResource> download(@RequestParam("id") String id) throws IOException, NoSuchRequestHandlingMethodException {
-		MongoDocument doc = documentService.get(id);
+		Document doc = documentService.get(id);
 		
 		InputStreamResource inputStreamResource = new InputStreamResource(documentService.getDocumentPayload(id));
 		
@@ -100,7 +103,7 @@ public class DocumentController {
     public Map<String, String> upload(@RequestParam("file") MultipartFile file, @RequestParam String id){
     	HashMap<String, String> response = new HashMap<String, String>();
         if (!file.isEmpty()) {
-        	MongoDocument doc = documentService.get(id);
+        	Document doc = documentService.get(id);
         	doc.setType(file.getContentType());
         	// FIXME: saveDocumentPayload deberia aceptar mejor MultipartFile
         	documentService.save(doc); 

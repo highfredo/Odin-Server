@@ -28,7 +28,16 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	
 	@Autowired
 	private GridFsOperations gridOperations;
-
+	
+	@Override
+	public MongoDocument create() {
+		MongoDocument doc = new MongoDocument();
+		doc.setOwner(UserAccountService.getPrincipal().getId());
+		doc.setCreation(new Date());
+		
+		return doc;
+	}
+	
 	@Override
 	public List<MongoDocument> listDocuments(String path) {
 		if(!path.endsWith("/")) path+="/";
@@ -95,19 +104,6 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 		return repositoy.findOne(id);
 	}
 	
-	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
-	public void move(String id, String to) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
-	public void copy(String id, String to) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ')")
@@ -145,10 +141,23 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 		return doc;
 	}
 	
+	@Override
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_WRITE') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
+	public void move(String id, String to) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
+	public void copy(String id, String to) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	private Query findFsFileById(String fsid) {
 		return Query.query(Criteria.where("_id").is(fsid));
 	}
-
 
 
 
