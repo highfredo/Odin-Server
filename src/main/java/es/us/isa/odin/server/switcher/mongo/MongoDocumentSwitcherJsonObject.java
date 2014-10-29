@@ -2,7 +2,6 @@ package es.us.isa.odin.server.switcher.mongo;
 
 import org.json.JSONObject;
 
-import es.us.isa.odin.server.domain.Document;
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.security.UserAccountService;
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;

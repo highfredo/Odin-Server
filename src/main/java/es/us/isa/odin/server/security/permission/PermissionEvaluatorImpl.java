@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.us.isa.odin.server.domain.Document;
 import es.us.isa.odin.server.domain.HaveId;
 import es.us.isa.odin.server.security.Authority;
 import es.us.isa.odin.server.security.UserAccount;
