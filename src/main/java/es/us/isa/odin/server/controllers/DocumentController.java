@@ -22,8 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.Document;
-import es.us.isa.odin.server.rest.DocumentRest;
 import es.us.isa.odin.server.services.DocumentService;
+import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
+import es.us.isa.odin.server.switcher.JsonObjectSwitcherDocument;
 
 @RestController
 @RequestMapping("/document")
@@ -32,11 +33,15 @@ public class DocumentController {
 
 	@Autowired
 	private DocumentService documentService;
+	@Autowired
+	private DocumentSwitcherJsonObject<Document> toJsonObject;
+	@Autowired
+	private JsonObjectSwitcherDocument<Document> toDocument;
 	
 	
 	@RequestMapping(value="/save")
-	public DocumentRest save(@RequestBody DocumentRest documentForm) {
-		
+	public JSONObject save(@RequestBody JSONObject documentForm) {
+		/*
 		Document document;
 		if(documentForm.getId() == null) {
 			document = documentService.create();
@@ -50,27 +55,29 @@ public class DocumentController {
 		document.setDescription(documentForm.getDescription());
 		document.setFolder(documentForm.getIsFolder());
 		document.setMetadata(documentForm.getMetadata());
+		*/
 		
+		Document document = toDocument.convert(documentForm, "save");
 		document = documentService.save(document);
 		
-		return new DocumentRest(document);
+		return toJsonObject.convert(document, "save");
 	}
 	
 	@RequestMapping("/list")
-	public List<DocumentRest> list(@RequestParam("path") String path) {
-		List<DocumentRest> result = new ArrayList<DocumentRest>();
+	public List<JSONObject> list(@RequestParam("path") String path) {
+		List<JSONObject> result = new ArrayList<JSONObject>();
 		List<Document> documents = documentService.listDocuments(path);
 		
 		for(Document doc : documents) {
-			result.add(new DocumentRest(doc));
+			result.add(toJsonObject.convert(doc, "list"));
 		}
 		
 		return result;
 	}
 	
 	@RequestMapping("/get")
-	public DocumentRest get(@RequestParam("id") String id) {
-		return new DocumentRest(documentService.get(id)); 
+	public JSONObject get(@RequestParam("id") String id) {
+		return toJsonObject.convert(documentService.get(id), "get"); 
 	}
 	
 	@RequestMapping("/remove")

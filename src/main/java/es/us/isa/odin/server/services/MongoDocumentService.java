@@ -31,6 +31,10 @@ public class MongoDocumentService implements DocumentService<MongoDocument> {
 	
 	@Override
 	public MongoDocument create() {
+		return createMongoDocument();
+	}
+	
+	public static MongoDocument createMongoDocument() {
 		MongoDocument doc = new MongoDocument();
 		doc.setOwner(UserAccountService.getPrincipal().getId());
 		doc.setCreation(new Date());
