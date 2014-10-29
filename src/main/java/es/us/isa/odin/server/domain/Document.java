@@ -6,6 +6,7 @@
 
 package es.us.isa.odin.server.domain;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,12 +16,12 @@ import java.util.Map;
  */
 public class Document<T> {
 
-    private String id;
+    private URI uri; // //{userId}/path/to/doc/{name}/#id
     private String name;
     private Long revision;
     private Date creation;
     private Date lastModification;   
-    private String path;
+    //private String path;
 	private String owner;
 	private Map<String, String> permissions; // {id_user: "r", id_user: "rw", public: "rw"}   
     private T payload;
@@ -31,24 +32,15 @@ public class Document<T> {
     private Map<String, Object> metadata;   
     
 
-    
-    
-    
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
+    public URI getUri() {
+		return uri;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setUri(URI uri) {
+		this.uri = uri;
+	}
 
-    /**
+	/**
      * @return the name
      */
     public String getName() {
@@ -103,16 +95,7 @@ public class Document<T> {
     public void setLastModification(Date lastModification) {
         this.lastModification = lastModification;
     }
-    
-    
-    public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-	
+    	
 	public String getOwner() {
 		return owner;
 	}

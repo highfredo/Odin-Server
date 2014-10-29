@@ -41,8 +41,8 @@
           <td ng-if="doc.isFolder"><span class="glyphicon glyphicon-folder-open file-icon"></span></td>
           <td ng-if="!doc.isFolder"><span class="glyphicon glyphicon-file file-icon"></span></td>
           
-          <td ng-if="doc.isFolder"><a ui-sref="list({path: doc.path.substring(1) + doc.name})">{{doc.name}}</a></td>
-          <td ng-if="!doc.isFolder && doc.hasFile"><a target="_blank" ng-href="{{backendUrl}}document/download?id={{doc.id}}">{{doc.name}}</a></td>
+          <td ng-if="doc.isFolder"><a ui-sref="list({path: doc.path.substring(1)})">{{doc.name}}</a></td>
+          <td ng-if="!doc.isFolder && doc.hasFile"><a target="_blank" ng-href="{{backendUrl}}document/{{doc.id}}?download=true">{{doc.name}}</a></td>
           <td ng-if="!doc.isFolder && !doc.hasFile">{{doc.name}}</td> 
           
           <td ng-if="doc.lastModification">{{doc.lastModification | date:'dd-MM-yyyy hh:mma'}}</td>

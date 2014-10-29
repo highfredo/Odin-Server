@@ -15,9 +15,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
 
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
+import es.us.isa.odin.server.switcher.DocumentURIBuilder;
 import es.us.isa.odin.server.switcher.JsonObjectSwitcherDocument;
 import es.us.isa.odin.server.switcher.mongo.JsonObjectSwitcherMongoDocument;
 import es.us.isa.odin.server.switcher.mongo.MongoDocumentSwitcherJsonObject;
+import es.us.isa.odin.server.switcher.mongo.MongoDocumentURIBuilder;
 
 
 @Configuration
@@ -60,5 +62,10 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
     public DocumentSwitcherJsonObject<?> documentSwitcherJsonObject() {
     	return new MongoDocumentSwitcherJsonObject();
     } 
+    
+    @Bean
+    public DocumentURIBuilder documentURIBuilder() {
+    	return new MongoDocumentURIBuilder();
+    }
     
 }

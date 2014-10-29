@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.us.isa.odin.server.domain.Document;
+import es.us.isa.odin.server.domain.HaveId;
 import es.us.isa.odin.server.security.Authority;
 import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.UserAccountRepository;
@@ -31,10 +32,9 @@ public class PermissionEvaluatorImpl implements PermissionEvaluator {
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
 	@Transactional
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-		Document entity = (Document) targetDomainObject;
+		HaveId entity = (HaveId) targetDomainObject;
 		return hasPermission(authentication, entity.getId(), entity.getClass().getSimpleName(), permission);
 	}
 

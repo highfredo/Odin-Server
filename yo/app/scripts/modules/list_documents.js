@@ -4,45 +4,36 @@
 var module = angular.module('listDocumentsModule', [])
     
 module.factory('Document',  function($resource) {
-	return $resource($backendUrl+'document/:action/', {}, {
-		list: {
-			method: 'GET', 
-			params: {
-				action: 'list'
-			}, 
-			isArray: true
-		},
-		save: {
-			method: 'POST', 
-			params: {
-				action: 'save'
-			}
-		},
+	return $resource($backendUrl+'document/:id')
+	/*return $resource($backendUrl+'document/:docId', {}, {
 		remove: {
 			method: 'DELETE', 
 			params: {
-				action: 'remove'
+				docId: '@id'
 			}
+		}
+	});*/
+});
+
+/*
+module.factory('DocumentList',  function($resource) {
+	return $resource($backendUrl+'document/list/:pathToDoc', {}, {
+		list: {
+			method: 'GET', 
+			params: {
+				pathToDoc: '@path'
+			}, 
+			isArray: true
 		}
 	});
 });
+*/
 
 module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $modal, Document) {
 	$scope.path = $state.params.path.split("/");
 	$scope.currentPath = "/" + $state.params.path;
-		
-	/*
-	$('.download-btn').tooltip({
-	   container: 'body',
-		title: "Descargar"
-	}) 
-	$('.remove-btn').tooltip({
-		container: 'body',
-		title: "Borrar"
-	}) 
-	*/
 	
-	Document.list({path: $scope.currentPath}, function(result){
+	Document.query({uri: $scope.currentPath}, function(result){
 		$scope.documents = result;
 	})
 	
@@ -80,27 +71,6 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 		});
 	}
 	
-	/*
-	$scope.viewFolder = function(folderId, editMode) {
-		var modalInstance = $modal.open({
-		      templateUrl: 'views/view_folder.html',
-		      controller: 'viewFolderCtrl',
-		      size: 'sm',
-		      resolve: {
-			    editMode: function() {
-		      		return editMode
-		      	}
-			  }
-		});		
-		
-		modalInstance.result.then(function (folderName) {
-		      var newFolder = new Document({name: folderName, path: $scope.currentPath, isFolder: true})
-		      newFolder.$save(function(response){
-		    	  $scope.documents.unshift(response)
-		      })
-		});
-	}
-	*/
 	$scope.remove = function(docId) {
 		if (confirm('¿Desea borrar el fichero?')) {
 			Document.remove({id: docId}, function(result){
@@ -126,15 +96,15 @@ module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload,
 	}
 	
 	$scope.ok = function () {
-		$.extend($scope.document, {path: currentPath, isFolder: false})
+		$.extend($scope.document, {path: currentPath+$scope.document.name+"/", isFolder: false})
 	    var newDocument = new Document($scope.document)
 		$scope.uploading = true;
 		newDocument.$save(function(response){
 			if($scope.file) {
 				$scope.upload = $upload.upload({
-			        url: $backendUrl+'document/upload', 
+			        url: $backendUrl+'document/'+response.id, 
 			        method: 'POST',
-			        data: {id: response.id},
+			        data: {upload: true},
 			        file: $scope.file,
 			    }).progress(function(evt) {
 			    	$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
@@ -164,7 +134,7 @@ module.controller('viewFolderCtrl', function ($scope, $modalInstance, $state, Do
 	$scope.document = document; 
 	
 	$scope.ok = function () {
-		$.extend($scope.document, {path: currentPath, isFolder: true})
+		$.extend($scope.document, {path: currentPath+$scope.document.name+"/", isFolder: true})
 		var newFolder = new Document($scope.document)
 		newFolder.$save(function(response){
 			$state.go($state.current, {}, {reload: true});

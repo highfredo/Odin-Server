@@ -10,7 +10,7 @@ import es.us.isa.odin.server.security.UserAccount;
 import es.us.isa.odin.server.security.permission.Permissions.DOCUMENT;
 
 @Component
-public class DocumentPermissionResolver implements PermissionResorver {
+public class MongoDocumentPermissionResolver implements PermissionResorver {
 
 	@Autowired
 	private MongoDocumentRepository repository;

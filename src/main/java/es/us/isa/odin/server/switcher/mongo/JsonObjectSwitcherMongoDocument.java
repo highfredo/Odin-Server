@@ -24,24 +24,20 @@ public class JsonObjectSwitcherMongoDocument implements JsonObjectSwitcherDocume
 			document = MongoDocumentService.createMongoDocument();
 		}
 
-		if(source.has("name"))
+		if(source.has("name")) 
 			document.setName(source.getString("name"));
+		
 		if(source.has("path"))
 			document.setPath(source.getString("path"));
+		
 		if(source.has("description"))
 			document.setDescription(source.getString("description"));
+		
 		if(source.has("isFolder"))
 			document.setFolder(source.getBoolean("isFolder"));
 		//if(source.has("metadata"))
 		//	document.setMetadata(source.get("metadata"));
 		
-		/*
-		result.put("name", source.getName());
-		result.put("path", source.getPath());
-		result.put("description", source.getDescription());
-		result.put("isFolder", source.isFolder());
-		result.put("metadata", source.getMetadata());
-		*/
 		
 		return document;
 	}

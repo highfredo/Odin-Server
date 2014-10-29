@@ -16,7 +16,7 @@ public class MongoDocumentSwitcherJsonObject implements DocumentSwitcherJsonObje
 		result.put("id", source.getId());
 		result.put("revision", source.getRevision());
 		result.put("name", source.getName());
-		result.put("path", source.getPath());
+		result.put("path", source.getUri().getPath());
 		result.put("description", source.getDescription());
 		result.put("isFolder", source.isFolder());
 		result.put("metadata", source.getMetadata());

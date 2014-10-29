@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
 import es.us.isa.odin.server.security.permission.PermissionEvaluatorImpl;
-import es.us.isa.odin.server.security.permission.DocumentPermissionResolver;
+import es.us.isa.odin.server.security.permission.MongoDocumentPermissionResolver;
 import es.us.isa.odin.server.security.permission.PermissionResorver;
 
 @Configuration
@@ -23,7 +23,7 @@ public class PermissionEvaluatorWebSecurityConfig extends GlobalMethodSecurityCo
 	protected MethodSecurityExpressionHandler createExpressionHandler() {
 		DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
 		HashMap<String, PermissionResorver> permissionResorvers = new HashMap<String, PermissionResorver>();
-		permissionResorvers.put("Document", permissionResorver());
+		permissionResorvers.put("MongoDocument", permissionResorver());
 				
 		expressionHandler.setPermissionEvaluator(new PermissionEvaluatorImpl(permissionResorvers));
 		return expressionHandler;  
@@ -32,7 +32,7 @@ public class PermissionEvaluatorWebSecurityConfig extends GlobalMethodSecurityCo
 	 @Bean
 	 @Scope(value="singleton", proxyMode=ScopedProxyMode.INTERFACES)
 	 public PermissionResorver permissionResorver() {
-		 return new DocumentPermissionResolver();
+		 return new MongoDocumentPermissionResolver();
 	 }
 
 }
