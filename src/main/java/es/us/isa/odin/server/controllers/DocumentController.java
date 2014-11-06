@@ -27,6 +27,8 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.Document;
+import es.us.isa.odin.server.domain.documenttype.DocumentType;
+import es.us.isa.odin.server.domain.documenttype.FileDocumentType;
 import es.us.isa.odin.server.services.DocumentFolderService;
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
 import es.us.isa.odin.server.switcher.DocumentURIBuilder;
@@ -61,7 +63,6 @@ public class DocumentController {
 		Document doc = documentService.get(docUri);
 		
 		InputStreamResource inputStreamResource = new InputStreamResource(documentService.getDocumentPayload(docUri));
-		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Disposition", "attachment; filename=\"" + doc.getName() + "\"");
 		headers.setContentLength(doc.getLength());
@@ -139,7 +140,7 @@ public class DocumentController {
 	    JSONObject response = new JSONObject();
 		if (!file.isEmpty()) {
 			Document doc = documentService.get(docUri);
-			doc.setType(file.getContentType());
+			doc.setType(new FileDocumentType(file.getContentType()));
 			try {
 				documentService.save(doc, file.getInputStream());
 				response.put("OK", "Fichero subido correctamente");

@@ -10,6 +10,8 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
+import es.us.isa.odin.server.domain.documenttype.DocumentType;
+
 /**
  *
  * @author japarejo
@@ -21,14 +23,13 @@ public class Document<T> {
     private Long revision;
     private Date creation;
     private Date lastModification;   
-    //private String path;
 	private String owner;
 	private Map<String, String> permissions; // {id_user: "r", id_user: "rw", public: "rw"}   
     private T payload;
     private String description;  
-    private Boolean isFolder;
+    // private Boolean isFolder;
     private Long length;
-    private String type; // DocumentType
+    private DocumentType type; 
     private Map<String, Object> metadata;   
     
 
@@ -154,14 +155,6 @@ public class Document<T> {
         this.description = description;
     }
 
-	public Boolean isFolder() {
-		return isFolder;
-	}
-	
-	public void setFolder(Boolean isFolder) {
-		this.isFolder = isFolder;
-	}
-
 	public Long getLength() {
 		return length;
 	}
@@ -170,11 +163,11 @@ public class Document<T> {
 		this.length = length;
 	}
 
-	public String getType() {
+	public DocumentType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(DocumentType type) {
 		this.type = type;
 	}
 

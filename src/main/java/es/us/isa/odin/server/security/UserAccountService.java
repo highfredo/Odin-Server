@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import es.us.isa.odin.server.domain.Document;
 import es.us.isa.odin.server.domain.MongoDocument;
+import es.us.isa.odin.server.domain.documenttype.FolderDocumentType;
 import es.us.isa.odin.server.security.permission.Permissions;
 import es.us.isa.odin.server.services.DocumentFolderService;
 
@@ -42,7 +43,7 @@ public class UserAccountService implements SocialUserDetailsService {
 		rootDocument.setName("root");
 		rootDocument.setOwner(user.getId());
 		rootDocument.setPath("/");
-		rootDocument.setFolder(true);
+		rootDocument.setType(new FolderDocumentType());
 		documentService.save(rootDocument);
 		
 		return user;

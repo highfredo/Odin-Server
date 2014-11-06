@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.us.isa.odin.server.domain.MongoDocument;
+import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;
 import es.us.isa.odin.server.services.MongoDocumentService;
 import es.us.isa.odin.server.switcher.JsonObjectSwitcherDocument;
@@ -33,8 +34,12 @@ public class JsonObjectSwitcherMongoDocument implements JsonObjectSwitcherDocume
 		if(source.has("description"))
 			document.setDescription(source.getString("description"));
 		
-		if(source.has("isFolder"))
-			document.setFolder(source.getBoolean("isFolder"));
+		if(source.has("type"))
+			document.setType(DocumentTypes.getInstance(source.getString("type")));
+		
+		if(source.has("payload"))
+			document.setPayload(source.getString("payload"));
+		
 		//if(source.has("metadata"))
 		//	document.setMetadata(source.get("metadata"));
 		
