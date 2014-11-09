@@ -150,6 +150,7 @@ public class DocumentController {
 				response.put("OK", "Fichero subido correctamente");
 			} catch (Exception e) {
 				response.put("error", e.getMessage());
+				e.printStackTrace();
 			}
 		} else {
 			response.put("error", "File empty");

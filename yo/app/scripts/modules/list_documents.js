@@ -26,8 +26,8 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 			templateUrl = 'views/view_folder.html'
 			controller = 'viewFolderCtrl'
 		} else {
-			templateUrl = doc.isFolder ? 'views/view_folder.html' : 'views/view_document.html'
-			controller = doc.isFolder ? 'viewFolderCtrl' : 'viewDocumentCtrl'
+			templateUrl = doc.type == "folder" ? 'views/view_folder.html' : 'views/view_document.html'
+			controller = doc.type == "folder" ? 'viewFolderCtrl' : 'viewDocumentCtrl'
 		}
 			
 		var modalInstance = $modal.open({

@@ -1,9 +1,10 @@
 package es.us.isa.odin.server.domain.documenttype;
 
 
-public class FileDocumentType extends DocumentType {
+public class FileDocumentType implements DocumentType {
 
 	private String subType;
+	// private String type = DocumentTypes.FILE_VALUE;
 
 	public FileDocumentType(String subType) {
 		this.subType = subType;
@@ -25,27 +26,6 @@ public class FileDocumentType extends DocumentType {
 	@Override
 	public String toString() {
 		return getType() + "::" + subType;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (super.equals(obj) == true) {
-			if (this == obj)
-				return true;
-			if (!super.equals(obj))
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			FileDocumentType other = (FileDocumentType) obj;
-			if (subType == null) {
-				if (other.subType != null)
-					return false;
-			} else if (!subType.equals(other.subType))
-				return false;
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 }

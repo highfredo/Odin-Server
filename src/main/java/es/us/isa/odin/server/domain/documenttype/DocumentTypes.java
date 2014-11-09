@@ -19,8 +19,8 @@ public class DocumentTypes {
 	
 	static {
 		FILE = new FileDocumentType(null);
-		TEXT = null;
-		LINK = null;
+		TEXT = new TextDocumentType();
+		LINK = new LinkDocumentType();
 		FOLDER = new FolderDocumentType();
 	}
 	

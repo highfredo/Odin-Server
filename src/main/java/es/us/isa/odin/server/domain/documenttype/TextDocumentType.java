@@ -1,10 +1,10 @@
 package es.us.isa.odin.server.domain.documenttype;
 
-public class FolderDocumentType implements DocumentType {
+public class TextDocumentType implements DocumentType {
 
 	@Override
 	public String getType() {
-		return DocumentTypes.FOLDER_VALUE;
+		return DocumentTypes.TEXT_VALUE;
 	}
 
 }

@@ -13,12 +13,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule;
-import com.mongodb.DBObject;
 
-import es.us.isa.odin.server.converters.DBObjectToDocumentTypeConverter;
-import es.us.isa.odin.server.converters.DBObjectToFileDocumentTypeConverter;
-import es.us.isa.odin.server.converters.DocumentTypeToDBObjectConverter;
-import es.us.isa.odin.server.converters.FileDocumentTypeToDBObjectConverter;
 import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
 import es.us.isa.odin.server.switcher.DocumentURIBuilder;

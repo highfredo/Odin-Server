@@ -37,19 +37,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="doc in documents | orderBy:['-isFolder', orderByField]:reverseSort">
-          <td ng-if="doc.isFolder"><span class="glyphicon glyphicon-folder-open file-icon"></span></td>
+        <tr ng-repeat="doc in documents | orderBy:['-type', orderByField]:reverseSort">
+          <td ng-if="doc.type == 'folder'"><span class="glyphicon glyphicon-folder-open file-icon"></span></td>
           <td ng-if="doc.type == 'file'"><span class="glyphicon glyphicon-file file-icon"></span></td>
           <td ng-if="doc.type == 'text'"><span class="glyphicon glyphicon-font file-icon"></span></td>
           <td ng-if="doc.type == 'link'"><span class="glyphicon glyphicon-paperclip file-icon"></span></td>
           
-          <td ng-if="doc.isFolder"><a ui-sref="list({path: doc.path.substring(1)})">{{doc.name}}</a></td>
-          <td ng-if="!doc.isFolder && doc.hasFile">
+          <td ng-if="doc.type == 'folder'"><a ui-sref="list({path: doc.path.substring(1)})">{{doc.name}}</a></td>
+          <td ng-if="doc.type != 'folder' && doc.hasFile">
           	<a ng-if="doc.type == 'file'" target="_blank" ng-href="{{backendUrl}}document/{{doc.id}}?download=true">{{doc.name}}</a>
           	<a ng-if="doc.type == 'text'" target="_blank" ng-href="{{backendUrl}}document/{{doc.id}}?download=true">{{doc.name}}</a>
           	<a ng-if="doc.type == 'link'" target="_blank" ng-href="{{doc.payload}}">{{doc.name}}</a>
           </td>
-          <td ng-if="!doc.isFolder && !doc.hasFile">{{doc.name}}</td> 
+          <td ng-if="doc.type != 'folder' && !doc.hasFile">{{doc.name}}</td> 
           
           <td ng-if="doc.lastModification">{{doc.lastModification | date:'dd-MM-yyyy hh:mma'}}</td>
           <td ng-if="!doc.lastModification">No data</td>
