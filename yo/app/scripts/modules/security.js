@@ -8,8 +8,7 @@ module.factory('User',  function($resource) {
 
 
 module.controller('securityCtrl', function ($scope, $state, User) {
-	User.get({id:"me"}, function(response){
-		user = response;
+	User.get({id:"me"}, function(user){
 		user.authenticated = user.username != "anon" ? true : false;
 		$scope.user = user;
 		
