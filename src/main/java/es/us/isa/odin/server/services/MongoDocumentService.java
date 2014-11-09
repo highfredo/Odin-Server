@@ -20,6 +20,8 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 
 import es.us.isa.odin.server.domain.MongoDocument;
+import es.us.isa.odin.server.domain.documenttype.DocumentType;
+import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;
 import es.us.isa.odin.server.security.UserAccountService;
 
@@ -115,7 +117,7 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 	//@PreAuthorize("hasPermission(#id, 'MongoDocument', 'DOCUMENT_WRITE')")
 	public boolean remove(MongoDocument doc) {
 		try {
-			if(doc.isFolder()) {
+			if(doc.getType() == DocumentTypes.FOLDER) {
 				List<MongoDocument> toDelete = this.listAllDocuments(doc.getPath());
 				if(toDelete.isEmpty() == false) {
 					for(MongoDocument d : toDelete) {
@@ -164,10 +166,11 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 	@Override
 	//@PreAuthorize("hasPermission(#id, 'Document', 'DOCUMENT_READ') && hasPermission(#to, 'Document', 'DOCUMENT_WRITE')")
 	public void move(URI fromUri, URI toUri) {
+		/*
 		MongoDocument fromDoc = get(fromUri);
 		MongoDocument toDoc = get(toUri); //TODO: excepcion to el "toDoc" no es una carpeta
 		
-		if(fromDoc.isFolder()) {
+		if(fromDoc.getType() == DocumentTypes.FOLDER) {
 			List<MongoDocument> toMove = this.listAllDocuments(fromDoc.getPath());
 			if(toMove.isEmpty() == false) {
 				for(MongoDocument d : toMove) {
@@ -183,6 +186,7 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 			fromDoc.setPath(newUri);
 			save(fromDoc);
 		}
+		*/
 	}
 	
 	

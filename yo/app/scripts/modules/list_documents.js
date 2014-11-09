@@ -66,6 +66,9 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload, $state, Document, document, editMode, currentPath) {	
 	$scope.document = document; 
 	
+	$scope.changeType = function(type) {
+		$scope.document.type = type
+	}
 	
 	$scope.onFileSelect = function($files) {
 		$scope.file = $files[0]
@@ -75,11 +78,17 @@ module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload,
 	}
 	
 	$scope.ok = function () {
-		$.extend($scope.document, {path: currentPath+$scope.document.name+"/", isFolder: false})
+		$.extend($scope.document, {path: currentPath+$scope.document.name+"/"})
+		if($scope.document.type == 'text')
+			$scope.document.payload = $scope.payload.text;
+		if($scope.document.type == 'link')
+			$scope.document.payload = $scope.payload.link;
+		
+		
 	    var newDocument = new Document($scope.document)
 		$scope.uploading = true;
-		newDocument.$save(function(response){
-			if($scope.file) {
+		newDocument.$save(function(response) {
+			if($scope.file && $scope.document.type == 'file') {
 				$scope.upload = $upload.upload({
 			        url: $backendUrl+'document/'+response.id, 
 			        method: 'POST',
@@ -100,6 +109,7 @@ module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload,
 			}
 	    })
 	};
+	
 	$scope.cancel = function () {
 		if($scope.upload && $scope.uploading) {
 			$scope.upload.abort()
@@ -113,7 +123,7 @@ module.controller('viewFolderCtrl', function ($scope, $modalInstance, $state, Do
 	$scope.document = document; 
 	
 	$scope.ok = function () {
-		$.extend($scope.document, {path: currentPath+$scope.document.name+"/", isFolder: true})
+		$.extend($scope.document, {path: currentPath+$scope.document.name+"/", type: 'folder'})
 		var newFolder = new Document($scope.document)
 		newFolder.$save(function(response){
 			$state.go($state.current, {}, {reload: true});

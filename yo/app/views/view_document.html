@@ -1,6 +1,13 @@
 
-<div class="modal-header">
-	<h3 class="modal-title">Documento:</h3>
+<div class="modal-header" style="border-bottom: 0px;">
+	<div class="row">
+	<h3 class="modal-title col-md-4">Documento:</h3>
+	<tabset class="col-md-8" justified="true">
+		<tab heading="Fichero" select="changeType('file')"></tab>
+		<tab heading="Texto" select="changeType('text')"></tab>
+		<tab heading="Link" select="changeType('link')"></tab>
+	</tabset>
+	</div>
 </div>
 
 <div class="modal-body">
@@ -8,26 +15,42 @@
 		<form class="form-horizontal" role="form">	
 
 		  <div class="form-group col-md-11">
-		  	 <div class="input-group col-md-offset-1">
-			    <div class="input-group-addon">Fichero</div>
-			    <span class="btn btn-default btn-file btn-input-group-right">
-			    	{{fileName || 'Seleccionar'}}
-					<input type="file" ng-file-select="onFileSelect($files)">
-				</span>
+		  	 <div ng-if="document.type=='file'">
+		  	 	<div class="input-group col-md-offset-1">
+				    <div class="input-group-addon">Fichero</div>
+				    <span class="btn btn-default btn-file btn-input-group-right">
+				    	{{fileName || 'Seleccionar'}}
+						<input type="file" ng-file-select="onFileSelect($files)">
+					</span>
+		  	 	</div>
 			 </div>
+			 
+		  	 <div ng-if="document.type=='text'">
+		  	 	<div class="input-group col-md-offset-1">
+		  	 		<div class="input-group-addon">Texto</div>
+		  	 		<textarea ng-model="payload.text" required=""></textarea>
+		  	 	</div>
+		  	 </div>
+		  	 
+		  	 <div ng-if="document.type=='link'">
+		  	 	<div class="input-group col-md-offset-1">
+		  	 		<div class="input-group-addon">Link</div>
+		  	 		<input class="form-control" type="url" placeholder="www.example.com" ng-model="payload.link" required>
+		  	 	</div>
+		  	 </div>
 		  </div>
 		  
 		  <div class="form-group col-md-11">
 		    <div class="input-group col-md-offset-1">
 		      <div class="input-group-addon">Nombre</div>
-		      <input class="form-control" type="text" placeholder="foo.bar" ng-model="document.name">
+		      <input class="form-control" type="text" placeholder="foo.bar" ng-model="document.name" required>
 		    </div>
 		  </div>
 		  
 		  <div class="form-group col-md-11">
 		  	 <div class="input-group col-md-offset-1">
 			    <div class="input-group-addon">Descripción</div>
-				<textarea class="form-control" id="textarea" name="textarea" ng-model="document.description">default text</textarea>
+				<textarea class="form-control" id="textarea" name="textarea" ng-model="document.description"></textarea>
 			 </div>
 		  </div>
 		  

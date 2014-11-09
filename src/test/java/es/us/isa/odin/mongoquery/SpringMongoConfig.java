@@ -1,13 +1,24 @@
 package es.us.isa.odin.mongoquery;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.authentication.UserCredentials;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
+import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+
+import es.us.isa.odin.server.converters.DBObjectToDocumentTypeConverter;
+import es.us.isa.odin.server.converters.DBObjectToFileDocumentTypeConverter;
+import es.us.isa.odin.server.converters.DocumentTypeToDBObjectConverter;
+import es.us.isa.odin.server.converters.FileDocumentTypeToDBObjectConverter;
+import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
 
 @Configuration
 public class SpringMongoConfig extends AbstractMongoConfiguration {
@@ -26,10 +37,45 @@ public class SpringMongoConfig extends AbstractMongoConfiguration {
 	public Mongo mongo() throws Exception {
 		return new MongoClient("ds057538.mongolab.com", 57538);
 	}
-
+	
+	@Override
+	@SuppressWarnings("rawtypes")
+	public CustomConversions customConversions() {
+		List<Converter> converters = new ArrayList<Converter>();
+		converters.add(dbObjectToDocumentTypeConverter());
+		converters.add(dbObjectToFileDocumentTypeConverter());
+		converters.add(documentTypeToDBObjectConverter());
+		converters.add(fileDocumentTypeToDBObjectConverter());
+		return new CustomConversions(converters);
+	}
+/*
 	@Bean
 	public GridFsTemplate gridFsTemplate() throws Exception {
 		return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter());
 	}
-
+*/
+    @Bean
+    public DBObjectToDocumentTypeConverter dbObjectToDocumentTypeConverter() {
+    	return new DBObjectToDocumentTypeConverter();
+    }
+    
+    @Bean
+    public DBObjectToFileDocumentTypeConverter dbObjectToFileDocumentTypeConverter() {
+    	return new DBObjectToFileDocumentTypeConverter();
+    }
+    
+    @Bean
+    public DocumentTypeToDBObjectConverter documentTypeToDBObjectConverter() {
+    	return new DocumentTypeToDBObjectConverter();
+    }
+    
+    @Bean
+    public FileDocumentTypeToDBObjectConverter fileDocumentTypeToDBObjectConverter() {
+    	return new FileDocumentTypeToDBObjectConverter();
+    }
+    
+    @Bean
+    public DocumentTypes documentTypes() {
+    	return new DocumentTypes();
+    }
 }

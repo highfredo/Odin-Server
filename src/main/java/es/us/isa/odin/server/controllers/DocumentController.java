@@ -27,6 +27,9 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.Document;
+import es.us.isa.odin.server.domain.documenttype.DocumentType;
+import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
+import es.us.isa.odin.server.domain.documenttype.FileDocumentType;
 import es.us.isa.odin.server.services.DocumentFolderService;
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
 import es.us.isa.odin.server.switcher.DocumentURIBuilder;
@@ -45,6 +48,8 @@ public class DocumentController {
 	private JsonObjectSwitcherDocument<Document> toDocument;
 	@Autowired
 	private DocumentURIBuilder uriBuilder;
+	@Autowired
+	private DocumentTypes documentTypes;
 	
 	
 	@RequestMapping(value="/**", method=RequestMethod.GET)
@@ -139,7 +144,7 @@ public class DocumentController {
 	    JSONObject response = new JSONObject();
 		if (!file.isEmpty()) {
 			Document doc = documentService.get(docUri);
-			doc.setType(file.getContentType());
+			doc.setType(documentTypes.getFromMimeType(file.getContentType()));
 			try {
 				documentService.save(doc, file.getInputStream());
 				response.put("OK", "Fichero subido correctamente");
