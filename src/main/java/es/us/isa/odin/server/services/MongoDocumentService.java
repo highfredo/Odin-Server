@@ -67,7 +67,7 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 	
 	@Override
 	public List<MongoDocument> listDocuments(URI uri) {
-		String regexp = "^"+ uri.getSchemeSpecificPart().replaceAll(" ", "%20") +"[^w+/]+/(#.+)?$";
+		String regexp = "^"+ uri.getSchemeSpecificPart().replaceAll(" ", "%20") +"[^+/]+/(#.+)?$";
 		Query q = new Query(Criteria.where("uri.schemeSpecificPart").regex(regexp));
 		return mongoOperation.find(q, MongoDocument.class);
 	}
