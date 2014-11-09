@@ -1,7 +1,6 @@
 package es.us.isa.odin.server.switcher.mongo;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;

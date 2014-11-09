@@ -22,7 +22,6 @@ import com.mongodb.gridfs.GridFSFile;
 import es.us.isa.odin.server.domain.DocumentPayloadInformation;
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.domain.MongoDocumentPayloadInformation;
-import es.us.isa.odin.server.domain.documenttype.DocumentType;
 import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
 import es.us.isa.odin.server.domain.documenttype.FileDocumentType;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;

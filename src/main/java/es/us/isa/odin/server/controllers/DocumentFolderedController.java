@@ -1,35 +1,23 @@
 package es.us.isa.odin.server.controllers;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.Document;
-import es.us.isa.odin.server.domain.documenttype.DocumentType;
 import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
-import es.us.isa.odin.server.domain.documenttype.FileDocumentType;
 import es.us.isa.odin.server.services.DocumentFolderService;
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
 import es.us.isa.odin.server.switcher.DocumentURIBuilder;
@@ -43,9 +31,9 @@ public class DocumentFolderedController {
 	@Autowired
 	private DocumentFolderService documentService;
 	@Autowired
-	private DocumentSwitcherJsonObject<Document> toJsonObject;
+	private DocumentSwitcherJsonObject<Document<?>> toJsonObject;
 	@Autowired
-	private JsonObjectSwitcherDocument<Document> toDocument;
+	private JsonObjectSwitcherDocument<Document<?>> toDocument;
 	@Autowired
 	private DocumentURIBuilder uriBuilder;
 	@Autowired
@@ -57,9 +45,9 @@ public class DocumentFolderedController {
 	    URI docUri = uriBuilder.build(uri);
 	    
 		List<JSONObject> result = new ArrayList<JSONObject>();
-		List<Document> documents = documentService.listDocuments(docUri);
+		List<Document<?>> documents = documentService.listDocuments(docUri);
 		
-		for(Document doc : documents) {
+		for(Document<?> doc : documents) {
 			result.add(toJsonObject.convert(doc, "list"));
 		}
 		

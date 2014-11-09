@@ -3,9 +3,7 @@ package es.us.isa.odin.server.controllers;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,10 +26,7 @@ import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMeth
 
 import es.us.isa.odin.server.domain.Document;
 import es.us.isa.odin.server.domain.DocumentPayloadInformation;
-import es.us.isa.odin.server.domain.documenttype.DocumentType;
 import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
-import es.us.isa.odin.server.domain.documenttype.FileDocumentType;
-import es.us.isa.odin.server.services.DocumentFolderService;
 import es.us.isa.odin.server.services.DocumentService;
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
 import es.us.isa.odin.server.switcher.DocumentURIBuilder;
@@ -45,9 +40,9 @@ public class DocumentController {
 	@Autowired
 	private DocumentService documentService;
 	@Autowired
-	private DocumentSwitcherJsonObject<Document> toJsonObject;
+	private DocumentSwitcherJsonObject<Document<?>> toJsonObject;
 	@Autowired
-	private JsonObjectSwitcherDocument<Document> toDocument;
+	private JsonObjectSwitcherDocument<Document<?>> toDocument;
 	@Autowired
 	private DocumentURIBuilder uriBuilder;
 	@Autowired
@@ -111,9 +106,9 @@ public class DocumentController {
 	@RequestMapping(value="", method=RequestMethod.GET, params="list")
 	public List<JSONObject> list() throws NoSuchRequestHandlingMethodException {
 		List<JSONObject> result = new ArrayList<JSONObject>();
-		List<Document> documents = documentService.listDocuments();
+		List<Document<?>> documents = documentService.listDocuments();
 		
-		for(Document doc : documents) {
+		for(Document<?> doc : documents) {
 			result.add(toJsonObject.convert(doc, "list"));
 		}
 		
@@ -123,7 +118,7 @@ public class DocumentController {
 	
 	@RequestMapping(value="", method=RequestMethod.POST)
 	public JSONObject save(@RequestBody JSONObject documentForm) {
-		Document document = toDocument.convert(documentForm, "save");
+		Document<?> document = toDocument.convert(documentForm, "save");
 		document = documentService.save(document);
 		
 		return toJsonObject.convert(document, "save");
@@ -132,7 +127,7 @@ public class DocumentController {
 	
 	@RequestMapping(value="/**", method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody JSONObject documentForm) {
-		Document document = toDocument.convert(documentForm, "update");
+		Document<?> document = toDocument.convert(documentForm, "update");
 		document = documentService.save(document);
 		
 		return toJsonObject.convert(document, "update");
@@ -146,7 +141,7 @@ public class DocumentController {
 	    
 	    JSONObject response = new JSONObject();
 		if (!file.isEmpty()) {
-			Document doc = documentService.get(docUri);
+			Document<?> doc = documentService.get(docUri);
 			doc.setType(documentTypes.getFromMimeType(file.getContentType()));
 			try {
 				documentService.save(doc, file.getInputStream());
