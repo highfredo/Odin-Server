@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.security.SocialUserDetails;
@@ -64,4 +65,5 @@ public class UserAccountService implements SocialUserDetailsService {
 	public static UserAccount getPrincipal() {
 		return (UserAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
+	
 }

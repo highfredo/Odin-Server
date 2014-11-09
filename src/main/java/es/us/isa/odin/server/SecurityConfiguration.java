@@ -23,7 +23,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
  
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/static/**");
+        web.ignoring().antMatchers("/images/**", "/scripts/**", "/styles/**", "/views/**", "/bower_components/**", "/*.html", "/*.ico", "/*.txt");
     }
  
     @Override
@@ -39,15 +39,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                 .deleteCookies("JSESSIONID")
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/")
             .and()
                 .authorizeRequests()
                 .antMatchers(
+                	"/",	
                     "/auth/**",
                     "/login",
                 	"/signup/**",
                 	"/signin/**",
-                	"/user/register/**"
+                	"/user/**"
                 ).permitAll()
                 .antMatchers("/**").hasRole("USER")
             .and()
@@ -59,12 +60,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth
             .userDetailsService(userDetailsService())
             .passwordEncoder(passwordEncoder());
-        
-    	/*
-	    auth.inMemoryAuthentication()
-	        .withUser("user").password("password").roles("USER").and()
-	        .withUser("admin").password("password").roles("USER", "ADMIN");
-	    */
     }
  
     @Bean

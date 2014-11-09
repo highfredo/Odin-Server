@@ -11,10 +11,14 @@ import es.us.isa.odin.server.security.UserAccountService;
 @RequestMapping("/user")
 public class UserController {
 
-	@RequestMapping(value="", method=RequestMethod.GET)
+	@RequestMapping(value="/me", method=RequestMethod.GET)
 	public JSONObject get() {
 		JSONObject result = new JSONObject();
-		result.put("username", UserAccountService.getPrincipal().getUsername());
+		try {
+			result.put("username", UserAccountService.getPrincipal().getUsername());
+		} catch(Exception e) {
+			result.put("username", "anon");
+		}
 		
 		return result;
 	}

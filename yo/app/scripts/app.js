@@ -34,6 +34,10 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadin
                     return this.self.error;
                 }
             }
+        })
+        .state('login', {
+        	url: '/login',
+        	templateUrl: 'views/login.html'
         })      
 })
 

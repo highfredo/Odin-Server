@@ -50,3 +50,26 @@ body {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 }
+
+/*
+	Login CSS
+*/
+.social-login-btn {
+  margin: 5px;
+  width: 40%;
+  font-size: 700%;
+  padding: 0;
+}
+
+.social-twitter {
+  background-color: #1daee3;
+  border-color: #3997ba;
+}
+.social-twitter:hover {
+  background-color: #3997ba;
+  border-color: #347b95;
+}
+
+/*
+	End Login CSS
+*/
