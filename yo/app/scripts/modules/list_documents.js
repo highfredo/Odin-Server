@@ -4,7 +4,7 @@
 var module = angular.module('listDocumentsModule', [])
     
 module.factory('Document',  function($resource) {
-	return $resource($backendUrl+'document/:id')
+	return $resource('document/:id')
 });
 
 
@@ -65,45 +65,57 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 
 module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload, $state, Document, document, editMode, currentPath) {	
 	$scope.document = document; 
+	$scope.payload = {};
+		
+	if(document.type == "text")
+		$scope.payload.text = document.payload;
+	else if(document.type == "link")
+		$scope.payload.link = document.payload;
 	
 	$scope.changeType = function(type) {
 		$scope.document.type = type
 	}
-	
+		
 	$scope.onFileSelect = function($files) {
-		$scope.file = $files[0]
+		$scope.payload.file = $files[0]
+		$scope.fileName = $scope.payload.file.name;
 		if(!document.id)
-			$scope.document.name = $scope.file.name;
-		$scope.fileName = $scope.file.name;
+			$scope.document.name = $scope.payload.file.name;
+	}
+	
+	var uploadFile = function(document) {
+		$scope.upload = $upload.upload({
+	        url: 'document/'+document.id, 
+	        method: 'POST',
+	        data: {upload: true},
+	        file: $scope.payload.file,
+	    }).progress(function(evt) {
+	    	$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+	    }).success(function(data, status, headers, config) {
+	        $modalInstance.close(document);
+	        $state.go($state.current, {}, {reload: true});
+	        $scope.uploading = false;
+	    }).error(function(data) {
+	    	alert("Ha ocurrido un error subiendo el fichero.")
+	    });	
 	}
 	
 	$scope.ok = function () {
 		$.extend($scope.document, {path: currentPath+$scope.document.name+"/"})
+		
 		if($scope.document.type == 'text')
 			$scope.document.payload = $scope.payload.text;
-		if($scope.document.type == 'link')
+		else if($scope.document.type == 'link')
 			$scope.document.payload = $scope.payload.link;
 		
 		
 	    var newDocument = new Document($scope.document)
 		$scope.uploading = true;
 		newDocument.$save(function(response) {
-			if($scope.file && $scope.document.type == 'file') {
-				$scope.upload = $upload.upload({
-			        url: $backendUrl+'document/'+response.id, 
-			        method: 'POST',
-			        data: {upload: true},
-			        file: $scope.file,
-			    }).progress(function(evt) {
-			    	$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
-			    }).success(function(data, status, headers, config) {
-			        $modalInstance.close(newDocument);
-			        $state.go($state.current, {}, {reload: true});
-			        $scope.uploading = false;
-			    }).error(function(data) {
-			    	alert("Ha ocurrido un error subiendo el fichero.")
-			    });		
+			if($scope.payload.file && $scope.document.type == 'file') {
+				uploadFile(response);
 			} else{
+				$scope.uploading = false;
 				$state.go($state.current, {}, {reload: true});
 				$modalInstance.close(response);
 			}

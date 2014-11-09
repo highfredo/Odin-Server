@@ -27,10 +27,12 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import es.us.isa.odin.server.domain.Document;
+import es.us.isa.odin.server.domain.DocumentPayloadInformation;
 import es.us.isa.odin.server.domain.documenttype.DocumentType;
 import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
 import es.us.isa.odin.server.domain.documenttype.FileDocumentType;
 import es.us.isa.odin.server.services.DocumentFolderService;
+import es.us.isa.odin.server.services.DocumentService;
 import es.us.isa.odin.server.switcher.DocumentSwitcherJsonObject;
 import es.us.isa.odin.server.switcher.DocumentURIBuilder;
 import es.us.isa.odin.server.switcher.JsonObjectSwitcherDocument;
@@ -41,7 +43,7 @@ import es.us.isa.odin.server.switcher.JsonObjectSwitcherDocument;
 public class DocumentController {
 
 	@Autowired
-	private DocumentFolderService documentService;
+	private DocumentService documentService;
 	@Autowired
 	private DocumentSwitcherJsonObject<Document> toJsonObject;
 	@Autowired
@@ -59,21 +61,38 @@ public class DocumentController {
 		return toJsonObject.convert(documentService.get(docUri), "get"); 
 	}
 	
+	
 	@RequestMapping(value="/**", method=RequestMethod.GET, params="download=true")
 	public ResponseEntity<InputStreamResource> download(HttpServletRequest request) throws IOException, NoSuchRequestHandlingMethodException {
 		String docId = extractPathFromPattern(request);
 		URI docUri = uriBuilder.build(docId);
-		Document doc = documentService.get(docUri);
-		
-		InputStreamResource inputStreamResource = new InputStreamResource(documentService.getDocumentPayload(docUri));
-		
+		DocumentPayloadInformation info = documentService.getDocumentPayload(docUri);
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Content-Disposition", "attachment; filename=\"" + doc.getName() + "\"");
-		headers.setContentLength(doc.getLength());
-		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		
+		if(info.redirect() != null) {
+			headers.add("Location", info.redirect());
+			return new ResponseEntity<InputStreamResource>(null, headers, HttpStatus.FOUND);
+		}
+		
+		InputStreamResource inputStreamResource = new InputStreamResource(info.inputStream());
+		
+		if(info.forceDownload()) {
+			headers.set("Content-Disposition", "attachment; filename=\"" + info.name() + "\"");
+		} else {
+			headers.set("Content-Disposition", "filename=\"" + info.name() + "\"");
+		}
+		
+		headers.setContentLength(info.length());
+		
+		try {
+			headers.setContentType(MediaType.parseMediaType(info.mimeType()));
+		} catch(Exception e) {
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		}
 		
 		return new ResponseEntity<InputStreamResource>(inputStreamResource, headers, HttpStatus.OK);
 	}
+	
 	
 	@RequestMapping(value="/**", method=RequestMethod.DELETE)
 	public JSONObject remove(HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
@@ -88,12 +107,11 @@ public class DocumentController {
 		return result; 
 	}
 	
-	@RequestMapping(value="", method=RequestMethod.GET, params="uri")
-	public List<JSONObject> list(@RequestParam String uri) throws NoSuchRequestHandlingMethodException {
-	    URI docUri = uriBuilder.build(uri);
-	    
+	
+	@RequestMapping(value="", method=RequestMethod.GET, params="list")
+	public List<JSONObject> list() throws NoSuchRequestHandlingMethodException {
 		List<JSONObject> result = new ArrayList<JSONObject>();
-		List<Document> documents = documentService.listDocuments(docUri);
+		List<Document> documents = documentService.listDocuments();
 		
 		for(Document doc : documents) {
 			result.add(toJsonObject.convert(doc, "list"));
@@ -111,6 +129,7 @@ public class DocumentController {
 		return toJsonObject.convert(document, "save");
 	}
 	
+	
 	@RequestMapping(value="/**", method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody JSONObject documentForm) {
 		Document document = toDocument.convert(documentForm, "update");
@@ -119,22 +138,6 @@ public class DocumentController {
 		return toJsonObject.convert(document, "update");
 	}
 	
-	@RequestMapping(value="/**", method=RequestMethod.PUT, params="move")
-	public JSONObject move(@RequestParam("move") String moveTo, HttpServletRequest request) throws NoSuchRequestHandlingMethodException {
-		JSONObject response = new JSONObject();
-		String docId = extractPathFromPattern(request);
-	    URI fromUri = uriBuilder.build(docId);
-	    URI toUri = uriBuilder.build(moveTo);
-	    
-		try {
-			documentService.move(fromUri, toUri);
-			response.put("OK", "Fichero copiado correctamente");
-		} catch (Exception e) {
-			response.put("error", e.getMessage());
-		}
-		
-		return response;
-	}
 		
 	@RequestMapping(value="/**", method=RequestMethod.POST, params="upload=true")
 	public JSONObject upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws NoSuchRequestHandlingMethodException {

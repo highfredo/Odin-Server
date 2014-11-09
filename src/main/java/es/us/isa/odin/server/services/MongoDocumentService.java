@@ -19,9 +19,12 @@ import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMeth
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 
+import es.us.isa.odin.server.domain.DocumentPayloadInformation;
 import es.us.isa.odin.server.domain.MongoDocument;
+import es.us.isa.odin.server.domain.MongoDocumentPayloadInformation;
 import es.us.isa.odin.server.domain.documenttype.DocumentType;
 import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
+import es.us.isa.odin.server.domain.documenttype.FileDocumentType;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;
 import es.us.isa.odin.server.security.UserAccountService;
 
@@ -145,15 +148,20 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 
 	@Override
 	//@PreAuthorize("hasPermission(#id, 'MongoDocument', 'DOCUMENT_READ')")
-	public InputStream getDocumentPayload(URI uri) throws NoSuchRequestHandlingMethodException {
+	public DocumentPayloadInformation getDocumentPayload(URI uri) throws NoSuchRequestHandlingMethodException {
+		
 		MongoDocument doc = repositoy.findOne(uri.getFragment());
 		
 		if(doc == null || StringUtils.isEmpty(doc.getPayload()))
 			throw new NoSuchRequestHandlingMethodException(uri.getFragment() + " Documento no encontrado", this.getClass());
 
-		GridFSDBFile fsdbFile = gridOperations.findOne(findFsFileById(doc.getPayload()));
+		if(doc.getType() instanceof FileDocumentType) {
+			GridFSDBFile fsdbFile = gridOperations.findOne(findFsFileById(doc.getPayload()));
+			return new MongoDocumentPayloadInformation(doc, fsdbFile.getInputStream());
+		} else {
+			return new MongoDocumentPayloadInformation(doc);
+		}
 		
-		return fsdbFile.getInputStream();
 	}
 	
 	@Override

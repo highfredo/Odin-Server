@@ -37,15 +37,13 @@ public class JsonObjectSwitcherMongoDocument implements JsonObjectSwitcherDocume
 		
 		if(source.has("description"))
 			document.setDescription(source.getString("description"));
-		
-		//if(source.has("isFolder"))
-		//	document.setFolder(source.getBoolean("isFolder"));
-		
+				
 		if(source.has("type"))
 			document.setType(documentTypes.get(source.getString("type")));
 		
-		//if(source.has("metadata"))
-		//	document.setMetadata(source.get("metadata"));
+		if(source.has("payload")) {
+			document.setPayload(source.getString("payload"));
+		}
 		
 		
 		return document;
