@@ -53,7 +53,7 @@ public class PermissionEvaluatorImpl implements PermissionEvaluator {
 			if(hasPermission) { 
 				PermissionResorver resolver = resolvers.get(targetType);
 				if(resolver != null) 
-					isAllowed = resolver.isAllowed(user, (String) targetId, (String) permission);
+					isAllowed = resolver.isAllowed(user, targetId, (String) permission);
 				else
 					System.err.println("RESOLVER NOT FOUND");
 			}

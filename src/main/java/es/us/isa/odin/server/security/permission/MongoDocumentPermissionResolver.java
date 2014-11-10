@@ -1,9 +1,11 @@
 package es.us.isa.odin.server.security.permission;
 
+import java.io.Serializable;
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.us.isa.odin.server.domain.Document;
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;
 import es.us.isa.odin.server.security.UserAccount;
@@ -17,18 +19,24 @@ public class MongoDocumentPermissionResolver implements PermissionResorver {
 	
 	
 	@Override
-	@SuppressWarnings("rawtypes")
 	public boolean isAllowed(UserAccount principal, Object targetDomainObject, String permission) {
-		return isAllowed(principal, (Document) targetDomainObject, permission);
+		return isAllowed(principal, ((MongoDocument) targetDomainObject).getId(), permission);
 	}
 
 	@Override
-	public boolean isAllowed(UserAccount principal, String targetId, String permission) {
+	public boolean isAllowed(UserAccount principal, Serializable targetId, String permission) {
 		boolean allowed = false;
 		
 		if(targetId == null) return true;
 		
-		MongoDocument doc = repository.findOne(targetId);
+		MongoDocument doc = null;
+		if(targetId instanceof String) {
+			doc = repository.findOne((String) targetId);
+		} else if(targetId instanceof URI) {
+			URI targetURI = (URI) targetId;
+			doc = repository.findOne(targetURI.getFragment());			
+		}
+		
 		
 		if(doc == null) return true;
 		

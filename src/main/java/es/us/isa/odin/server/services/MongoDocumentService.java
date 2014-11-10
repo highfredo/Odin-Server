@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
@@ -74,7 +75,7 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 		
 
 	@Override
-	//@PreAuthorize("hasPermission(#id, 'MongoDocument', 'DOCUMENT_WRITE')")
+	@PreAuthorize("hasPermission(#doc, 'DOCUMENT_WRITE')")
 	public MongoDocument save(MongoDocument doc) {
 		Date time = new Date();
 		if(doc.getOwner() == null) {
@@ -88,7 +89,7 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 	}
 
 	@Override
-	//@PreAuthorize("hasPermission(#id, 'MongoDocument', 'DOCUMENT_WRITE')")
+	@PreAuthorize("hasPermission(#doc, 'DOCUMENT_WRITE')")
 	public MongoDocument save(MongoDocument doc, InputStream file) throws NoSuchRequestHandlingMethodException {		
 		GridFSFile oldFsFile = gridOperations.findOne(findFsFileById(doc.getPayload()));
 		
@@ -106,7 +107,7 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 	}
 	
 	@Override
-	//@PreAuthorize("hasPermission(#id, 'MongoDocument', 'DOCUMENT_WRITE')")
+	@PreAuthorize("hasPermission(#uri, 'MongoDocument', 'DOCUMENT_READ')")
 	public boolean remove(URI uri) {
 		try {
 			MongoDocument doc = repositoy.findOne(uri.getFragment());
@@ -116,7 +117,7 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 		}
 	}
 	
-	//@PreAuthorize("hasPermission(#id, 'MongoDocument', 'DOCUMENT_WRITE')")
+	@PreAuthorize("hasPermission(#doc, 'DOCUMENT_WRITE')")
 	public boolean remove(MongoDocument doc) {
 		try {
 			if(doc.getType() == DocumentTypes.FOLDER) {
@@ -139,14 +140,14 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 	}
 	
 	@Override
-	//@PreAuthorize("hasPermission(#id, 'MongoDocument', 'DOCUMENT_READ')")
+	@PreAuthorize("hasPermission(#uri, 'MongoDocument', 'DOCUMENT_READ')")
 	public MongoDocument get(URI uri) {
 		return repositoy.findOne(uri.getFragment());
 	}
 	
 
 	@Override
-	//@PreAuthorize("hasPermission(#id, 'MongoDocument', 'DOCUMENT_READ')")
+	@PreAuthorize("hasPermission(#uri, 'MongoDocument', 'DOCUMENT_READ')")
 	public DocumentPayloadInformation getDocumentPayload(URI uri) throws NoSuchRequestHandlingMethodException {
 		
 		MongoDocument doc = repositoy.findOne(uri.getFragment());
