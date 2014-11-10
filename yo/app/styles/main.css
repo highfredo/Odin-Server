@@ -23,6 +23,10 @@ body {
 	font-size: 2em;
 }
 
+.head-file-icon {
+	font-size: 1.5em;
+}
+
 /* fix input file*/
 .btn-file {
     position: relative;

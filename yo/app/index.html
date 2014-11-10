@@ -38,7 +38,7 @@
             <li dropdown ng-if="user.authenticated">
                 <a class="dropdown-toggle" data-toggle="dropdown">Bienvenido, {{user.username}} <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a href="/logout">Salir</a></li>
+                  <li><a href="/logout" class="text-right"> <strong class="pull-left">Salir</strong> <span class="glyphicon glyphicon-off"></span></a></li>
                 </ul>
               </li>
             </ul>
@@ -46,7 +46,6 @@
       </div>
     </div>
 
-    <!-- <div ng-include="'views/list_documents.html'"></div> -->
     <div ui-view></div>
 
     <!-- build:js(.) scripts/vendor.js -->
