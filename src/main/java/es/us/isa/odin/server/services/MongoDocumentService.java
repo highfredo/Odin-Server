@@ -23,6 +23,7 @@ import com.mongodb.gridfs.GridFSFile;
 import es.us.isa.odin.server.domain.DocumentPayloadInformation;
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.domain.MongoDocumentPayloadInformation;
+import es.us.isa.odin.server.domain.documenttype.DocumentType;
 import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
 import es.us.isa.odin.server.domain.documenttype.FileDocumentType;
 import es.us.isa.odin.server.repositories.MongoDocumentRepository;
@@ -120,17 +121,13 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 	@PreAuthorize("hasPermission(#doc, 'DOCUMENT_WRITE')")
 	public boolean remove(MongoDocument doc) {
 		try {
-			if(doc.getType() == DocumentTypes.FOLDER) {
-				List<MongoDocument> toDelete = this.listAllDocuments(doc.getPath());
-				if(toDelete.isEmpty() == false) {
-					for(MongoDocument d : toDelete) {
-						repositoy.delete(d.getId());
-					}
+			List<MongoDocument> toDelete = this.listAllDocuments(doc.getPath());
+			for(MongoDocument d : toDelete) {
+				if(d.getType().getType().equals(DocumentTypes.FILE)) {
+					gridOperations.delete(findFsFileById(doc.getPayload()));
 				}
-				repositoy.delete(doc.getId());
-			} else {
-				gridOperations.delete(findFsFileById(doc.getPayload()));
-				repositoy.delete(doc.getId());
+				
+				repositoy.delete(d.getId());
 			}
 		} catch(Exception e) {
 			return false;
