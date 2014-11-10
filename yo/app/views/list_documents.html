@@ -37,7 +37,7 @@
         </tr>
       </thead>
       <tbody>
-     	<tr ng-show="documents != null && !documents.length"><td colspan="4" class="text-center"><h1>No hay ningún documento. <small><a href="#" ng-click="viewDocument(doc, true)">¡Sube uno!</a></small></h1></td></tr>
+     	<tr ng-show="documents != null && !documents.length"><td colspan="4" class="text-center"><h1>No hay ningún documento. <small><a href="#" ng-click="viewDocument('document', true)">¡Sube uno!</a></small></h1></td></tr>
         <tr ng-repeat="doc in documents | orderBy:[firstFolderers, orderByField]:reverseSort">
           <td ng-if="doc.type == 'folder'"><span class="glyphicon glyphicon-folder-open file-icon"></span></td>
           <td ng-if="doc.type == 'file'"><span class="glyphicon glyphicon-file file-icon"></span></td>
