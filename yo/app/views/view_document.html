@@ -3,9 +3,9 @@
 	<div class="row">
 	<h3 class="modal-title col-md-4">Documento:</h3>
 	<tabset class="col-md-8" justified="true">
-		<tab heading="Fichero" select="changeType('file')"></tab>
-		<tab heading="Texto" select="changeType('text')"></tab>
-		<tab heading="Link" select="changeType('link')"></tab>
+		<tab heading="Fichero" active="selectedTabs[0]" ng-click="changeType('file')"></tab>
+		<tab heading="Texto" active="selectedTabs[1]" ng-click="changeType('text')"></tab>
+		<tab heading="Link" active="selectedTabs[2]" ng-click="changeType('link')"></tab>
 	</tabset>
 	</div>
 </div>

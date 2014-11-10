@@ -38,7 +38,7 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 		      		if(typeof doc != "string")
 		      			return $.extend(true, {}, doc);
 		      		else 
-		      			return {}
+		      			return {type: "file"}
 		      	}, 
 		      	editMode: function() {
 		      		return editMode
@@ -61,6 +61,10 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 			})
 		}
 	}
+	
+	$scope.firstFolderers = function(document) {
+		return document.type != "folder";
+	}
 });
 
 module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload, $state, Document, document, editMode, currentPath) {	
@@ -72,7 +76,10 @@ module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload,
 	else if(document.type == "link")
 		$scope.payload.link = document.payload;
 	
+	// este "hack" hace falta por que en "selected" dentro de "tab" no funciona el operador "=="
+	$scope.selectedTabs = [document.type == "file", document.type == "text", document.type == "link"];
 	$scope.changeType = function(type) {
+		$scope.selectedTabs = [type == "file", type == "text", type == "link"];
 		$scope.document.type = type
 	}
 		
