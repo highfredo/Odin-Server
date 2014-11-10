@@ -17,7 +17,7 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 	})
 	
 	$scope.viewDocument = function(doc, editMode) {
-		var templateUrl, controller;
+		var templateUrl, controller, size;
 		
 		if(doc == null || doc == "document") {
 			templateUrl = 'views/view_document.html'
@@ -25,14 +25,17 @@ module.controller('listDocumentsCtrl', function ($scope, $resource, $state, $mod
 		} else if(doc == "folder") {
 			templateUrl = 'views/view_folder.html'
 			controller = 'viewFolderCtrl'
+			size = 'sm'
 		} else {
 			templateUrl = doc.type == "folder" ? 'views/view_folder.html' : 'views/view_document.html'
 			controller = doc.type == "folder" ? 'viewFolderCtrl' : 'viewDocumentCtrl'
+			size = doc.type == "folder" ? 'sm' : ''
 		}
 			
 		var modalInstance = $modal.open({
 		      templateUrl: templateUrl,
 		      controller: controller,
+		      size: size,
 		      resolve: {
 		      	document: function () {
 		      		if(typeof doc != "string")
