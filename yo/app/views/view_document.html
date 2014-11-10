@@ -10,8 +10,11 @@
 	</div>
 </div>
 
-<div class="modal-body">
-	<div class="row" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class-name-or-function">
+<div class="modal-body" ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="file-over">
+	<div class="file-over-container text-center">
+		<span class="glyphicon glyphicon-plus"></span>
+	</div>
+	<div class="row">
 		<form class="form-horizontal" role="form">	
 
 		  <div class="form-group col-md-11">

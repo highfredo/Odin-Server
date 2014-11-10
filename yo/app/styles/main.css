@@ -73,3 +73,19 @@ body {
 /*
 	End Login CSS
 */
+.file-over-container {
+  display: none
+}
+
+  /*content: url("http://globalvoicesonline.org/wp-content/uploads/2010/01/logo-2-transparency.png");*/
+.file-over .file-over-container {
+  display: block;
+  font-size: 1000%;
+  text-shadow: 0px 0px 20px rgba(138, 150, 91, 1);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}

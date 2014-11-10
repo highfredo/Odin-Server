@@ -84,6 +84,7 @@ module.controller('viewDocumentCtrl', function ($scope, $modalInstance, $upload,
 	}
 		
 	$scope.onFileSelect = function($files) {
+		$scope.changeType('file')
 		$scope.payload.file = $files[0]
 		$scope.fileName = $scope.payload.file.name;
 		if(!document.id)
