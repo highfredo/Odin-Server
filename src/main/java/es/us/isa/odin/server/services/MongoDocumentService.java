@@ -200,7 +200,7 @@ public class MongoDocumentService implements DocumentFolderService<MongoDocument
 	}
 
 	private List<MongoDocument> listAllDocuments(String path) {
-		return repositoy.findByUriSchemeSpecificPartStartsWith(path);
+		return repositoy.findByUriSchemeSpecificPartStartsWith(path.replaceAll(" ", "%20"));
 	}
 
 	
