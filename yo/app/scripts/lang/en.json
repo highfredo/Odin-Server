@@ -1,5 +1,15 @@
 {
 
-	"FILE_NAME": "Name"
+	"MY_DOCUMENTS": "My documents",
+	"SHARED_DOCUMENTS": "Shared",
+	"WELCOME": "Wellcome",
+	"LOG_OUT": "Log out",
 
+	"FILE_NAME": "Name",
+	"EDITED_DATE": "Edited date",
+	"NEW_DOCUMENT": "New Document",
+	"NEW_FOLDER": "New Folder",
+	"NO_DOCUMENTS": "There is no document here.",
+	"CREATE_ONE": "¡Create one!",
+	"NO_DATA": "No data"
 }

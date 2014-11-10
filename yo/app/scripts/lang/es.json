@@ -1,5 +1,15 @@
 {
 
-	"FILE_NAME": "Nombre"
+	"MY_DOCUMENTS": "Mis documentos",
+	"SHARED_DOCUMENTS": "Compartidos",
+	"WELCOME": "Bienvenido",
+	"LOG_OUT": "Salir",
 
+	"FILE_NAME": "Nombre",
+	"EDITED_DATE": "Modificado el",
+	"NEW_DOCUMENT": "Nuevo Documento",
+	"NEW_FOLDER": "Nueva Carpeta",
+	"NO_DOCUMENTS": "No hay ningún documento.",
+	"CREATE_ONE": "¡Sube uno!",
+	"NO_DATA": "Sin información"
 }

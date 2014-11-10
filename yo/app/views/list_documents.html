@@ -24,7 +24,7 @@
           	</span>
           </th>
           <th class="col-md-2 pointer" ng-click="orderByField='lastModification'; reverseSort = !reverseSort">
-          	Modificado el
+          	{{'EDITED_DATE' | translate}}
           	<span ng-show="orderByField == 'lastModification'">
           		<span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span>
 	          	<span ng-show="reverseSort"  class="glyphicon glyphicon-chevron-down"></span>
@@ -32,14 +32,14 @@
           </th>
           <th class="col-md-3">
             <div class="btn-group pull-right">
-	          	<a class="btn btn-primary" ng-click="viewDocument('document', true)"><span class="glyphicon glyphicon-cloud-upload"></span> Nuevo Documento</a>
-	          	<a class="btn btn-info" ng-click="viewDocument('folder', true)"><span class="glyphicon glyphicon-folder-open"></span> Nueva Carpeta</a>
+	          	<a class="btn btn-primary" ng-click="viewDocument('document', true)"><span class="glyphicon glyphicon-cloud-upload"></span> {{'NEW_DOCUMENT' | translate}}</a>
+	          	<a class="btn btn-info" ng-click="viewDocument('folder', true)"><span class="glyphicon glyphicon-folder-open"></span> {{'NEW_FOLDER' | translate}}</a>
           	</div> 
           </th>
         </tr>
       </thead>
       <tbody>
-     	<tr ng-show="documents != null && !documents.length"><td colspan="4" class="text-center"><h1>No hay ningún documento. <small><a href="#" ng-click="viewDocument('document', true)">¡Sube uno!</a></small></h1></td></tr>
+     	<tr ng-show="documents != null && !documents.length"><td colspan="4" class="text-center"><h1>{{'NO_DOCUMENTS' | translate}} <small><a href="#" ng-click="viewDocument('document', true)">{{'CREATE_ONE' | translate}}</a></small></h1></td></tr>
         <tr ng-repeat="doc in documents | orderBy:[firstFolderers, orderByField]:reverseSort">
           <td ng-if="doc.type == 'folder'"><span class="glyphicon glyphicon-folder-open file-icon"></span></td>
           <td ng-if="doc.type == 'file'">
@@ -58,7 +58,7 @@
           <td ng-if="doc.type != 'folder' && !doc.hasFile">{{doc.name}}</td> 
           
           <td ng-if="doc.lastModification">{{doc.lastModification | date:'dd-MM-yyyy hh:mma'}}</td>
-          <td ng-if="!doc.lastModification">No data</td>
+          <td ng-if="!doc.lastModification">{{'NO_DATA' | translate}}</td>
           
           <td>
           	<div class="btn-group col-md-offset-6 pull-right">
