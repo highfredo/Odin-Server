@@ -9,6 +9,7 @@
 	<groupId>es.us.isa.odin</groupId>
 	<artifactId>odin-server</artifactId>
 	<version>0.0.1-JOHNNY</version>
+	<packaging>war</packaging>
 	
 	<!-- Propiedades generales del proyecto -->
 	<properties>
@@ -28,6 +29,12 @@
 	    <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
         
 		<dependency>
@@ -129,5 +136,43 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<!-- Profiles -->
+	<profiles>
+		<!-- Default Build -->
+		<profile>
+			<id>default</id>
+		    <activation>
+		    	<activeByDefault>true</activeByDefault>
+		    </activation>
+		    <build>
+				<plugins>
+		            <plugin>
+		                <groupId>com.github.trecloux</groupId>
+					    <artifactId>yeoman-maven-plugin</artifactId>
+					    <version>0.2</version>
+					    <executions>
+					        <execution>
+					            <goals><goal>build</goal></goals>
+					        </execution>
+					    </executions>
+					    <configuration><skipTests>true</skipTests></configuration>
+		            </plugin>
+		        </plugins>
+		    </build>
+	    </profile>
+	    <!-- /Default Build -->
+		<!-- Heroku Build -->
+		<profile>
+			<id>heroku</id>
+			<activation>
+	            <property>
+	                <name>env.DYNO</name>
+	            </property>
+	        </activation>
+		</profile>
+		<!-- /Heroku Build -->
+	</profiles>
+	<!-- /Profiles -->
 	
 </project>
