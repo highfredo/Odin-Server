@@ -1,5 +1,6 @@
 package es.us.isa.odin.server.security;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Service;
 
 import es.us.isa.odin.server.domain.MongoDocument;
 import es.us.isa.odin.server.domain.documenttype.DocumentTypes;
+import es.us.isa.odin.server.repositories.MongoDocumentRepository;
 import es.us.isa.odin.server.security.permission.Permissions;
 import es.us.isa.odin.server.services.DocumentFolderService;
+import es.us.isa.odin.server.services.MongoDocumentService;
 
 
 @Service
@@ -24,7 +27,7 @@ public class UserAccountService implements SocialUserDetailsService {
 	@Autowired
 	private UserAccountRepository repository;
 	@Autowired
-	private DocumentFolderService<MongoDocument> documentService;
+	private MongoDocumentRepository mongoDocumentRepository;
 	
 	public UserAccount create(Connection<?> connection) {
 		
@@ -38,13 +41,16 @@ public class UserAccountService implements SocialUserDetailsService {
 		
 		repository.save(user);
 		
+		Date time = new Date();
 		MongoDocument rootDocument = new MongoDocument();
 		rootDocument.setName("root");
 		rootDocument.setOwner(user.getId());
+		rootDocument.setCreation(time);
+		rootDocument.setLastModification(time);
 		rootDocument.setPath("/");
-		// rootDocument.setFolder(true);
 		rootDocument.setType(DocumentTypes.FOLDER);
-		documentService.save(rootDocument);
+		mongoDocumentRepository.save(rootDocument);
+
 		
 		return user;
 	}
